@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Price Negotiator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <meta name="google-signin-scope" content="profile email">
+  <meta name="google-signin-client_id" content='497761592902-8cei8do1lf7c2nu50b7qj8a64pk7an2c.apps.googleusercontent.com'>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Source+Sans+Pro&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/fontawesome/css/all.css">
+
+  <link rel="stylesheet" type="text/css" href="styles/root.css">
+  <link rel="stylesheet" type="text/css" href="styles/index.css">
+</head>
+
+<body>
+
+  <main class="padding-default">
+
+    <section class="index-login-container">
+
+      <div class="login-box">
+
+        <section class="row login-box-header">
+          <div class="logo-wrapper-44">
+            <a href="/"><img class="logo" src="g" alt=""></img></a>
+          </div>
+          <h1>Price Negotiator</h1>
+        </section>
+
+        <div class="login-btn">
+          <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Google Sign In -->
+  <script>
+  function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    var id_token = googleUser.getAuthResponse().id_token;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://localhost/auth/login');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+      window.location.href = xhr.responseText;
+    };
+    xhr.send('idtoken=' + id_token);
+  };
+  </script>
+
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <!-- Load React -->
+  <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+  <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Load React components -->
+</body>
+
+</html>
