@@ -22,6 +22,7 @@ login.post('/login', async function(req, res) {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload(); // Get the payload
+    console.log(payload)
     const checkUserId = await dbUser.checkUserId(payload['sub']); // Check DB for user
 
     if (checkUserId.status === 'exists') { // 1. User account exists
