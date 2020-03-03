@@ -1,4 +1,4 @@
-CREATE DATABASE if not exists priceNegotiator;
+CREATE DATABASE if not exists pn_DB;
 
 
 CREATE TABLE if not exists priceNegotiator.userDetails(
