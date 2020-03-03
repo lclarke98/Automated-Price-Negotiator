@@ -33,13 +33,11 @@ login.post('/login', async function(req, res) {
       req.session.userId = payload['sub']; // Set the users ID to their session
       return res.status(200).send("/main/dashboard");
     } else if (checkUserId.status === 'empty') { // 1. User account does not exist
-      if (emailCheck.approved = 1) {
         const userDetails = { id: payload['sub'], email: payload['email'], name: payload['name'], picture: payload['picture'] };
         const result = await dbUser.createUser(userDetails);
-      }
-      req.session.userId = payload['sub'];
-      console.log("NEW USER")
-      return res.status(201).send("/main/dashboard");
+        req.session.userId = payload['sub'];
+        console.log("NEW USER")
+        return res.status(201).send("/main/dashboard");
     } else {
       res.redirect(400, '/');
     }
