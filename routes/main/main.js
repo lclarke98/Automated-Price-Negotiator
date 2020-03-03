@@ -16,5 +16,5 @@ main.use(session(config.cookie));
 // Missing middlewares for checks
 
 main.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../', 'src/html/index.html'));
-  });
+  res.sendFile(path.join(__dirname, '../../', 'src/html/index.html'));
+});
