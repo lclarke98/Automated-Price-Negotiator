@@ -13,8 +13,8 @@
   <base href="../">
 
   <link rel="stylesheet" type="text/css" href="styles/root.css">
-  <link rel="stylesheet" type="text/css" href="styles/index.css">
   <link rel="stylesheet" type="text/css" href="styles/header.css">
+  <link rel="stylesheet" type="text/css" href="styles/component.css">
 </head>
 
 <body>
@@ -23,7 +23,34 @@
         
     </header>
 
-  <main class="padding-default">
+  <main id="main" class="padding-default">
+
+    <section id="buy-container" class="">
+    </section>
+
+    <section id="sell-container" class="">
+    </section>
+
+    <div class="cmpnt-container-l padding-0810">
+        <section class="cmpnt-name">
+        <h1>{this.state.assignments[i].title}</h1>
+        </section>
+        <div class="cmpnt-seperator"></div>
+        <section class="cmpnt-info-l">
+        <p>Work Due: {this.state.assignments[i].dueDateSubmissions}</p>
+        <p>Submitted: {this.state.assignments[i].workSubmitted}</p>
+        <p>Reviews Due: {this.state.assignments[i].dueDateReviews}</p>
+        <p>Completed: {this.state.assignments[i].reviewsCompleted}</p>
+        </section>
+        <div class="cmpnt-seperator"></div>
+        <section class="cmpnt-btn-container-l">
+        <div class="default-btns-l">
+        <a href="#" class="cmpnt-btn-l">
+        <span><p>Open</p></span>
+        </a>
+        </div>
+        </section>
+        </div>
 
   </main>
 
