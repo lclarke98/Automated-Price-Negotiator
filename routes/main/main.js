@@ -18,3 +18,7 @@ main.use(session(config.cookie));
 main.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../../', 'src/html/index.html'));
 });
+
+main.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../', 'src/html/dashboard.html'));
+});

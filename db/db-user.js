@@ -102,3 +102,24 @@ module.exports.checkUserId = async (userId) => {
       return { status: 'empty' }
     }
   };
+
+/**
+* getUserAvatar(userId) -
+* Gets a users avatar from the 'userDetails' table.
+* @param {JSON} userId The users id
+* @return {JSON} A status code and the users avatar or a status code or a status code with an error message
+*/
+module.exports.getUserAvatar = async (userId) => {
+  try {
+    const sql = await config.sqlPromise;
+    const [result] = await sql.query(sql.format('SELECT user_picture FROM userDetails WHERE user_id = ?', [userId]));
+    if (result.length === 1) {
+      return { status: 'success', picture: result[0].user_picture };
+    } else {
+      return { status: 'fail' };
+    }
+  } catch (e) {
+    console.log(e)
+    return { status: 'error', error: e };
+  }
+};
