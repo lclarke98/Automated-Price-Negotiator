@@ -66,7 +66,7 @@ async function logout() {
   window.location.href = '/';
 };
 
-  class ListLayout extends React.Component {
+class ListLayout extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -103,4 +103,64 @@ async function logout() {
         </div>
       );
     }
-  };
+};
+
+class JoinClassForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      classCode: ''
+    };
+
+    this.validate = this.validate.bind(this);
+    this.submitHandler = this.submitHandler.bind(this);
+    this.changeHandler = this.changeHandler.bind(this);
+  }
+
+  async submitHandler(event) {
+    event.preventDefault();
+    const result = await this.validate(this.state);
+    if (result === true) {
+      const response = await fetch('/api/class/join', {
+        method: 'POST',
+        headers: { 'Content-Type' : 'application/json' },
+        body: JSON.stringify({
+          id: this.state.classCode
+        })
+      })
+      const data = await response.json();
+      if (data.status === 'success') {
+        ReactDOM.unmountComponentAtNode(document.getElementById('page-content'));
+        await dashboardContents();
+      }
+      renderMessage(data)
+      closeModal();
+    } else {
+      const err = document.getElementById('modal-msg');
+      err.style.display = "flex";
+    }
+  }
+
+  validate(data) {
+    const err = document.getElementById('modal-msg');
+    err.style.display = "none";
+    if (/^[a-zA-Z0-9]*$/.test(data.classCode) === false) {
+      err.textContent = "The name you have entered must contain only letters and numbers. Please change this before attempting to submit again.";
+      return false;
+    }
+    return true;
+  }
+
+  changeHandler(event) {
+    this.setState({[event.target.name]: event.target.value})
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.submitHandler}>
+      <input className="modal-input-max" type="text" name="classCode" value={this.state.value} onChange={this.changeHandler} placeholder="Enter Class ID Here" minLength="8" maxLength="8" required />
+      <input className="modal-btn" type="submit" value="Submit" />
+      </form>
+    );
+  }
+};
