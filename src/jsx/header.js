@@ -23,7 +23,7 @@ async function loadHeader() {
   );
 };
 
-// ntoe to self make logout available
+// note to self make logout available
 /**
 * HeaderBar() - Contains the HTML for the header component.
 * @return returns the HTML for the header component
