@@ -54,7 +54,10 @@ class AddItemForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      classCode: ''
+      productName: '',
+      productRRP: '',
+      productQty: '',
+      productLowestPrice: ''
     };
 
     this.validate = this.validate.bind(this);
@@ -66,11 +69,11 @@ class AddItemForm extends React.Component {
     event.preventDefault();
     const result = await this.validate(this.state);
     if (result === true) {
-      const response = await fetch('/api/class/join', {
+      const response = await fetch('/api/upload/product', {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({
-          id: this.state.classCode
+          product: this.state,
         })
       })
       const data = await response.json();
@@ -79,14 +82,12 @@ class AddItemForm extends React.Component {
         await dashboardContents();
       }
       renderMessage(data)
-      closeModal();
     } else {
-      const err = document.getElementById('modal-msg');
-      err.style.display = "flex";
+      // ERROR DISPLAYED
     }
   }
 
-  validate(data) {
+  validate(data) { // Chnage me to check everything needed
     const err = document.getElementById('modal-msg');
     err.style.display = "none";
     if (/^[a-zA-Z0-9]*$/.test(data.classCode) === false) {
@@ -100,7 +101,7 @@ class AddItemForm extends React.Component {
     this.setState({[event.target.name]: event.target.value})
   }
 
-  render() {
+  render() { // Complete me
     return (
       <form onSubmit={this.submitHandler}>
       <input className="modal-input-max" type="text" name="classCode" value={this.state.value} onChange={this.changeHandler} placeholder="Enter Class ID Here" minLength="8" maxLength="8" required />

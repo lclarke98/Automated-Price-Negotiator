@@ -51,7 +51,10 @@ class AddItemForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      classCode: ''
+      productName: '',
+      productRRP: '',
+      productQty: '',
+      productLowestPrice: ''
     };
     this.validate = this.validate.bind(this);
     this.submitHandler = this.submitHandler.bind(this);
@@ -63,13 +66,13 @@ class AddItemForm extends React.Component {
     const result = await this.validate(this.state);
 
     if (result === true) {
-      const response = await fetch('/api/class/join', {
+      const response = await fetch('/api/upload/product', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          id: this.state.classCode
+          product: this.state
         })
       });
       const data = await response.json();
@@ -80,14 +83,12 @@ class AddItemForm extends React.Component {
       }
 
       renderMessage(data);
-      closeModal();
-    } else {
-      const err = document.getElementById('modal-msg');
-      err.style.display = "flex";
+    } else {// ERROR DISPLAYED
     }
   }
 
   validate(data) {
+    // Chnage me to check everything needed
     const err = document.getElementById('modal-msg');
     err.style.display = "none";
 
@@ -106,6 +107,7 @@ class AddItemForm extends React.Component {
   }
 
   render() {
+    // Complete me
     return React.createElement("form", {
       onSubmit: this.submitHandler
     }, React.createElement("input", {
