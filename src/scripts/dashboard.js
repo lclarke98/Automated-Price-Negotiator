@@ -7,6 +7,8 @@
 */
 async function loadScripts() {
   await loadHeader();
+  await dashboardOrchestrator();
+  await openBuyUI();
   gapi.load('auth2', function() {
     gapi.auth2.init();
   });

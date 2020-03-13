@@ -15,15 +15,8 @@ async function loadHeader() {
     header,
     document.getElementById('universal-header')
   );
-
-  const content = <ListLayout />;
-  ReactDOM.render(
-    content,
-    document.getElementById('main')
-  );
 };
 
-// note to self make logout available
 /**
 * HeaderBar() - Contains the HTML for the header component.
 * @return returns the HTML for the header component
@@ -31,17 +24,49 @@ async function loadHeader() {
 function HeaderBar(props) {
   return (
     <div className="header-container transition-03">
-      <section className="header-btns">
-        <div className="btn-container">
-          <img id="avatar-img" src={props.avatar} alt="Profile Image Placeholder"></img>
+      <section className="header-container">
+        <div className="header-menu">
+          <div onClick={openBuyUI} id="buy-ui-btn" className="header-menu-btn r-btn transition-02">Buy</div>
+          <div onClick={openSellUI} id="sell-ui-btn" className="header-menu-btn l-btn transition-02">Sell</div>
         </div>
-        <div id="avatar-menu">
-          <h1 id="logout" onClick={gLogout}>Logout</h1>
+        <div className="header-btns">
+          <div className="btn-container">
+            <img id="avatar-img" src={props.avatar} alt="Profile Image Placeholder"></img>
+          </div>
+          <div id="avatar-menu">
+            <h1 id="logout" onClick={gLogout}>Logout</h1>
+          </div>
         </div>
       </section>
     </div>
   );
 };
+
+function openBuyUI() {
+  const sellUI = document.getElementById('sell-container');
+  sellUI.style.display = 'none';
+  const sellBtn = document.getElementById('sell-ui-btn');
+  sellBtn.style.color = '#1478fa';
+  sellBtn.style.backgroundColor = '#fff';
+  const buyUI = document.getElementById('buy-container');
+  buyUI.style.display = 'flex';
+  const buyBtn = document.getElementById('buy-ui-btn');
+  buyBtn.style.color = '#fff';
+  buyBtn.style.backgroundColor = '#4293fb';
+}
+
+function openSellUI() {
+  const buyUI = document.getElementById('buy-container');
+  buyUI.style.display = 'none';
+  const buyBtn = document.getElementById('buy-ui-btn');
+  buyBtn.style.color = '#1478fa';
+  buyBtn.style.backgroundColor = '#fff';
+  const sellUI = document.getElementById('sell-container');
+  sellUI.style.display = 'flex';
+  const sellBtn = document.getElementById('sell-ui-btn');
+  sellBtn.style.color = '#fff';
+  sellBtn.style.backgroundColor = '#4293fb';
+}
 
 /**
 * gLogout() - Logs the current user out of the application via their google account.
@@ -52,7 +77,7 @@ function gLogout() {
     logout();
   });
 };
-  
+
 /**
 * logout() - Logs the current user out and redirects them to the '/'.
 */
@@ -64,103 +89,4 @@ async function logout() {
     redirect: 'follow'
   })
   window.location.href = '/';
-};
-
-class ListLayout extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        product: [],
-
-      };
-    }
-  
-    render () {
-      return (
-        <div id="list" className="list-layout">
-        {this.state.product.map((name, i) =>
-          <div key={i.toString()} className="cmpnt-container-l padding-0810">
-          <section className="cmpnt-name">
-          <h1>{this.state.assignments[i].title}</h1>
-          </section>
-          <div className="cmpnt-seperator"></div>
-          <section className="cmpnt-info-l">
-          <p>Work Due: {this.state.product[i].}</p>
-          <p>Submitted: {this.state.product[i].}</p>
-          <p>Reviews Due: {this.state.product[i].}</p>
-          <p>Completed: {this.state.product[i].}</p>
-          </section>
-          <div className="cmpnt-seperator"></div>
-          <section className="cmpnt-btn-container-l">
-          <div className="default-btns-l">
-          <a href="" className="cmpnt-btn-l">
-          <span><p>Open</p></span>
-          </a>
-          </div>
-          </section>
-          </div>
-        )}
-        </div>
-      );
-    }
-};
-
-class JoinClassForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      classCode: ''
-    };
-
-    this.validate = this.validate.bind(this);
-    this.submitHandler = this.submitHandler.bind(this);
-    this.changeHandler = this.changeHandler.bind(this);
-  }
-
-  async submitHandler(event) {
-    event.preventDefault();
-    const result = await this.validate(this.state);
-    if (result === true) {
-      const response = await fetch('/api/class/join', {
-        method: 'POST',
-        headers: { 'Content-Type' : 'application/json' },
-        body: JSON.stringify({
-          id: this.state.classCode
-        })
-      })
-      const data = await response.json();
-      if (data.status === 'success') {
-        ReactDOM.unmountComponentAtNode(document.getElementById('page-content'));
-        await dashboardContents();
-      }
-      renderMessage(data)
-      closeModal();
-    } else {
-      const err = document.getElementById('modal-msg');
-      err.style.display = "flex";
-    }
-  }
-
-  validate(data) {
-    const err = document.getElementById('modal-msg');
-    err.style.display = "none";
-    if (/^[a-zA-Z0-9]*$/.test(data.classCode) === false) {
-      err.textContent = "The name you have entered must contain only letters and numbers. Please change this before attempting to submit again.";
-      return false;
-    }
-    return true;
-  }
-
-  changeHandler(event) {
-    this.setState({[event.target.name]: event.target.value})
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.submitHandler}>
-      <input className="modal-input-max" type="text" name="classCode" value={this.state.value} onChange={this.changeHandler} placeholder="Enter Class ID Here" minLength="8" maxLength="8" required />
-      <input className="modal-btn" type="submit" value="Submit" />
-      </form>
-    );
-  }
 };

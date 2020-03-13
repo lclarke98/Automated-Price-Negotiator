@@ -13,12 +13,9 @@ async function loadHeader() {
     avatar: userAvatar
   });
   ReactDOM.render(header, document.getElementById('universal-header'));
-  const content = React.createElement(ListLayout, null);
-  ReactDOM.render(content, document.getElementById('main'));
 }
 
-; // ntoe to self make logout available
-
+;
 /**
 * HeaderBar() - Contains the HTML for the header component.
 * @return returns the HTML for the header component
@@ -28,6 +25,18 @@ function HeaderBar(props) {
   return React.createElement("div", {
     className: "header-container transition-03"
   }, React.createElement("section", {
+    className: "header-container"
+  }, React.createElement("div", {
+    className: "header-menu"
+  }, React.createElement("div", {
+    onClick: openBuyUI,
+    id: "buy-ui-btn",
+    className: "header-menu-btn r-btn transition-02"
+  }, "Buy"), React.createElement("div", {
+    onClick: openSellUI,
+    id: "sell-ui-btn",
+    className: "header-menu-btn l-btn transition-02"
+  }, "Sell")), React.createElement("div", {
     className: "header-btns"
   }, React.createElement("div", {
     className: "btn-container"
@@ -40,13 +49,40 @@ function HeaderBar(props) {
   }, React.createElement("h1", {
     id: "logout",
     onClick: gLogout
-  }, "Logout"))));
+  }, "Logout")))));
 }
 
 ;
+
+function openBuyUI() {
+  const sellUI = document.getElementById('sell-container');
+  sellUI.style.display = 'none';
+  const sellBtn = document.getElementById('sell-ui-btn');
+  sellBtn.style.color = '#1478fa';
+  sellBtn.style.backgroundColor = '#fff';
+  const buyUI = document.getElementById('buy-container');
+  buyUI.style.display = 'flex';
+  const buyBtn = document.getElementById('buy-ui-btn');
+  buyBtn.style.color = '#fff';
+  buyBtn.style.backgroundColor = '#4293fb';
+}
+
+function openSellUI() {
+  const buyUI = document.getElementById('buy-container');
+  buyUI.style.display = 'none';
+  const buyBtn = document.getElementById('buy-ui-btn');
+  buyBtn.style.color = '#1478fa';
+  buyBtn.style.backgroundColor = '#fff';
+  const sellUI = document.getElementById('sell-container');
+  sellUI.style.display = 'flex';
+  const sellBtn = document.getElementById('sell-ui-btn');
+  sellBtn.style.color = '#fff';
+  sellBtn.style.backgroundColor = '#4293fb';
+}
 /**
 * gLogout() - Logs the current user out of the application via their google account.
 */
+
 
 function gLogout() {
   const auth2 = gapi.auth2.getAuthInstance();
@@ -68,41 +104,6 @@ async function logout() {
     redirect: 'follow'
   });
   window.location.href = '/';
-}
-
-;
-
-class ListLayout extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return React.createElement("div", {
-      id: "list",
-      className: "list-layout"
-    }, this.state.SOMETHING.map((name, i) => React.createElement("div", {
-      key: i.toString(),
-      className: "cmpnt-container-l padding-0810"
-    }, React.createElement("section", {
-      className: "cmpnt-name"
-    }, React.createElement("h1", null, this.state.assignments[i].title)), React.createElement("div", {
-      className: "cmpnt-seperator"
-    }), React.createElement("section", {
-      className: "cmpnt-info-l"
-    }, React.createElement("p", null, "Work Due: ", this.state.assignments[i].dueDateSubmissions), React.createElement("p", null, "Submitted: ", this.state.assignments[i].workSubmitted), React.createElement("p", null, "Reviews Due: ", this.state.assignments[i].dueDateReviews), React.createElement("p", null, "Completed: ", this.state.assignments[i].reviewsCompleted)), React.createElement("div", {
-      className: "cmpnt-seperator"
-    }), React.createElement("section", {
-      className: "cmpnt-btn-container-l"
-    }, React.createElement("div", {
-      className: "default-btns-l"
-    }, React.createElement("a", {
-      href: "",
-      className: "cmpnt-btn-l"
-    }, React.createElement("span", null, React.createElement("p", null, "Open"))))))));
-  }
-
 }
 
 ;
