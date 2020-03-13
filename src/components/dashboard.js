@@ -9,6 +9,8 @@ async function dashboardOrchestrator() {
     products: products
   });
   ReactDOM.render(buyUI, document.getElementById('buy-container'));
+  const sellUI = React.createElement(AddItemForm);
+  ReactDOM.render(sellUI, document.getElementById('sell-container'));
 }
 
 class BuyListUI extends React.Component {
@@ -113,14 +115,46 @@ class AddItemForm extends React.Component {
     }, React.createElement("input", {
       className: "modal-input-max",
       type: "text",
-      name: "classCode",
+      name: "productName",
       value: this.state.value,
       onChange: this.changeHandler,
-      placeholder: "Enter Class ID Here",
-      minLength: "8",
-      maxLength: "8",
+      placeholder: "Enter Product Name",
+      minLength: "10",
+      maxLength: "64",
       required: true
     }), React.createElement("input", {
+      className: "modal-input-max",
+      type: "number",
+      name: "productRrpPrice",
+      value: this.state.value,
+      onChange: this.changeHandler,
+      placeholder: "Enter the starting price",
+      minLength: "0.01",
+      step: "0.01",
+      maxLength: "5000",
+      required: true
+    }),React.createElement("input", {
+      className: "modal-input-max",
+      type: "number",
+      name: "productLowestPrice",
+      value: this.state.value,
+      onChange: this.changeHandler,
+      placeholder: "Enter the lowest price",
+      minLength: "0.01",
+      step: "0.01",
+      maxLength: "5000",
+      required: true
+    }),React.createElement("input", {
+      className: "modal-input-max",
+      type: "number",
+      name: "productQuantity",
+      value: this.state.value,
+      onChange: this.changeHandler,
+      placeholder: "Enter Product quantity",
+      minLength: "100",
+      maxLength: "1",
+      required: true
+    }),React.createElement("input", {
       className: "modal-btn",
       type: "submit",
       value: "Submit"
