@@ -16,7 +16,7 @@ CREATE TABLE if not exists pn_DB.userCookies(
 
 CREATE TABLE if not exists pn_DB.productDetails(
   product_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  product_name VARCHAR(64) NOT NULL,
+  product_name VARCHAR(128) NOT NULL,
   product_rrp INT NOT NULL,
   product_lowestPrice INT NOT NULL,
   product_qty INT NOT NULL
