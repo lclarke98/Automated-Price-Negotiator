@@ -7,10 +7,15 @@ async function dashboardOrchestrator() {
   const products = await getProducts.json();
 
   const buyUI = <BuyListUI products={products} />
+  const sellUI = <AddItemForm/>
 
   ReactDOM.render(
     buyUI,
     document.getElementById('buy-container')
+  );
+  ReactDOM.render(
+    sellUI,
+    document.getElementById('sell-container')
   );
 }
 
@@ -104,7 +109,10 @@ class AddItemForm extends React.Component {
   render() { // Complete me
     return (
       <form onSubmit={this.submitHandler}>
-      <input className="modal-input-max" type="text" name="classCode" value={this.state.value} onChange={this.changeHandler} placeholder="Enter Class ID Here" minLength="8" maxLength="8" required />
+      <input className="modal-input-max" type="text" name="productName" value={this.state.value} onChange={this.changeHandler} placeholder="Enter Product Name" minLength="10" maxLength="64" required />
+      <input className="modal-input-max" type="number" name="productRrpPrice" value={this.state.value} onChange={this.changeHandler} placeholder="Enter the starting price" minLength="0.01" step="0.01" maxLength="5000" required />
+      <input className="modal-input-max" type="number" name="productLowestPrice" value={this.state.value} onChange={this.changeHandler} placeholder="Enter the lowest price" minLength="0.01" step="0.01" maxLength="5000" required />
+      <input className="modal-input-max" type="number" name="productQuantity" value={this.state.value} onChange={this.changeHandler} placeholder="Enter product quantity" minLength="1" maxLength="100" required />
       <input className="modal-btn" type="submit" value="Submit" />
       </form>
     );
