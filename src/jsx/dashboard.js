@@ -43,7 +43,7 @@ class BuyListUI extends React.Component {
         <div className="cmpnt-seperator"></div>
         <section className="cmpnt-btn-container-l">
         <div className="default-btns-l">
-        <a className="cmpnt-btn-l">
+        <a onClick={() => renderNegotiation(this.state.product[i].product_id, this.state.product[i].product_name)} className="cmpnt-btn-l">
         <span><p>Negotiate!</p></span>
         </a>
         </div>
@@ -65,16 +65,13 @@ class AddItemForm extends React.Component {
       productLowestPrice: ''
     };
 
-    this.validate = this.validate.bind(this);
     this.submitHandler = this.submitHandler.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
   }
 
   async submitHandler(event) {
     event.preventDefault();
-    const result = await this.validate(this.state);
-    if (result === true) {
-      const response = await fetch('/api/upload/product', {
+      const response = await fetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({
@@ -82,24 +79,8 @@ class AddItemForm extends React.Component {
         })
       })
       const data = await response.json();
-      if (data.status === 'success') {
-        ReactDOM.unmountComponentAtNode(document.getElementById('page-content'));
-        await dashboardContents();
-      }
-      renderMessage(data)
-    } else {
-      // ERROR DISPLAYED
-    }
-  }
-
-  validate(data) { // Chnage me to check everything needed
-    const err = document.getElementById('modal-msg');
-    err.style.display = "none";
-    if (/^[a-zA-Z0-9]*$/.test(data.classCode) === false) {
-      err.textContent = "The name you have entered must contain only letters and numbers. Please change this before attempting to submit again.";
-      return false;
-    }
-    return true;
+      console.log("This is the submission result for the product")
+      console.log(data)
   }
 
   changeHandler(event) {
@@ -108,13 +89,53 @@ class AddItemForm extends React.Component {
 
   render() { // Complete me
     return (
-      <form onSubmit={this.submitHandler}>
-      <input className="modal-input-max" type="text" name="productName" value={this.state.value} onChange={this.changeHandler} placeholder="Enter Product Name" minLength="10" maxLength="64" required />
-      <input className="modal-input-max" type="number" name="productRrpPrice" value={this.state.value} onChange={this.changeHandler} placeholder="Enter the starting price" minLength="0.01" step="0.01" maxLength="5000" required />
-      <input className="modal-input-max" type="number" name="productLowestPrice" value={this.state.value} onChange={this.changeHandler} placeholder="Enter the lowest price" minLength="0.01" step="0.01" maxLength="5000" required />
-      <input className="modal-input-max" type="number" name="productQuantity" value={this.state.value} onChange={this.changeHandler} placeholder="Enter product quantity" minLength="1" maxLength="100" required />
+      <form onSubmit={this.submitHandler} onChange={this.changeHandler}>
+      <input className="modal-input-max" type="text" name="productName" value={this.state.value} placeholder="Enter Product Name" minLength="10" maxLength="64" required />
+      <input className="modal-input-max" type="number" name="productRRP" value={this.state.value} placeholder="Enter the starting price" minLength="0.01" step="0.01" maxLength="5000" required />
+      <input className="modal-input-max" type="number" name="productLowestPrice" value={this.state.value} placeholder="Enter the lowest price" minLength="0.01" step="0.01" maxLength="5000" required />
+      <input className="modal-input-max" type="number" name="productQty" value={this.state.value} placeholder="Enter product quantity" minLength="1" maxLength="100" required />
       <input className="modal-btn" type="submit" value="Submit" />
       </form>
     );
   }
 };
+
+function openModal() {
+  document.getElementById('modal-container').style.display = "flex";
+};
+function closeModal() {
+  ReactDOM.unmountComponentAtNode(document.getElementById('modal-container'));
+  document.getElementById('modal-container').style.display = "none";
+};
+function ModalBackBtn(props) {
+  return (
+    <div className="modal-back-btn">
+    <span onClick={closeModal} className="fas fa-chevron-left"><p className="modal-back-btn-txt">back</p></span>
+    </div>
+  );
+};
+
+function ModalContainer(props) {
+  return (
+    <React.Fragment>
+    <div className="overlay"></div>
+    <div className="modal-wrapper padding-default">
+    <div className="modal default-size padding-default">
+    <ModalBackBtn />
+    <h2 id="modal-title" className="modal-title">Negotiation for {props.productName}</h2>
+    <p>{props.productId}</p>
+    <button className="">Accept</button>
+    </div>
+    </div>
+    </React.Fragment>
+  );
+};
+
+async function renderNegotiation (productId, productName) {
+  const modal = <ModalContainer productId={productId} productName={productName} />
+  ReactDOM.render(
+    modal,
+    document.getElementById('modal-container')
+  );
+  openModal();
+}

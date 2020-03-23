@@ -8,8 +8,8 @@ async function dashboardOrchestrator() {
   const buyUI = React.createElement(BuyListUI, {
     products: products
   });
+  const sellUI = React.createElement(AddItemForm, null);
   ReactDOM.render(buyUI, document.getElementById('buy-container'));
-  const sellUI = React.createElement(AddItemForm);
   ReactDOM.render(sellUI, document.getElementById('sell-container'));
 }
 
@@ -41,6 +41,7 @@ class BuyListUI extends React.Component {
     }, React.createElement("div", {
       className: "default-btns-l"
     }, React.createElement("a", {
+      onClick: () => renderNegotiation(this.state.product[i].product_id, this.state.product[i].product_name),
       className: "cmpnt-btn-l"
     }, React.createElement("span", null, React.createElement("p", null, "Negotiate!"))))))));
   }
@@ -58,48 +59,24 @@ class AddItemForm extends React.Component {
       productQty: '',
       productLowestPrice: ''
     };
-    this.validate = this.validate.bind(this);
     this.submitHandler = this.submitHandler.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
   }
 
   async submitHandler(event) {
     event.preventDefault();
-    const result = await this.validate(this.state);
-
-    if (result === true) {
-      const response = await fetch('/api/upload/product', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          product: this.state
-        })
-      });
-      const data = await response.json();
-
-      if (data.status === 'success') {
-        ReactDOM.unmountComponentAtNode(document.getElementById('page-content'));
-        await dashboardContents();
-      }
-
-      renderMessage(data);
-    } else {// ERROR DISPLAYED
-    }
-  }
-
-  validate(data) {
-    // Chnage me to check everything needed
-    const err = document.getElementById('modal-msg');
-    err.style.display = "none";
-
-    if (/^[a-zA-Z0-9]*$/.test(data.classCode) === false) {
-      err.textContent = "The name you have entered must contain only letters and numbers. Please change this before attempting to submit again.";
-      return false;
-    }
-
-    return true;
+    const response = await fetch('/api/products', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        product: this.state
+      })
+    });
+    const data = await response.json();
+    console.log("This is the submission result for the product");
+    console.log(data);
   }
 
   changeHandler(event) {
@@ -111,13 +88,13 @@ class AddItemForm extends React.Component {
   render() {
     // Complete me
     return React.createElement("form", {
-      onSubmit: this.submitHandler
+      onSubmit: this.submitHandler,
+      onChange: this.changeHandler
     }, React.createElement("input", {
       className: "modal-input-max",
       type: "text",
       name: "productName",
       value: this.state.value,
-      onChange: this.changeHandler,
       placeholder: "Enter Product Name",
       minLength: "10",
       maxLength: "64",
@@ -125,36 +102,33 @@ class AddItemForm extends React.Component {
     }), React.createElement("input", {
       className: "modal-input-max",
       type: "number",
-      name: "productRrpPrice",
+      name: "productRRP",
       value: this.state.value,
-      onChange: this.changeHandler,
       placeholder: "Enter the starting price",
       minLength: "0.01",
       step: "0.01",
       maxLength: "5000",
       required: true
-    }),React.createElement("input", {
+    }), React.createElement("input", {
       className: "modal-input-max",
       type: "number",
       name: "productLowestPrice",
       value: this.state.value,
-      onChange: this.changeHandler,
       placeholder: "Enter the lowest price",
       minLength: "0.01",
       step: "0.01",
       maxLength: "5000",
       required: true
-    }),React.createElement("input", {
+    }), React.createElement("input", {
       className: "modal-input-max",
       type: "number",
-      name: "productQuantity",
+      name: "productQty",
       value: this.state.value,
-      onChange: this.changeHandler,
-      placeholder: "Enter Product quantity",
-      minLength: "100",
-      maxLength: "1",
+      placeholder: "Enter product quantity",
+      minLength: "1",
+      maxLength: "100",
       required: true
-    }),React.createElement("input", {
+    }), React.createElement("input", {
       className: "modal-btn",
       type: "submit",
       value: "Submit"
@@ -164,3 +138,55 @@ class AddItemForm extends React.Component {
 }
 
 ;
+
+function openModal() {
+  document.getElementById('modal-container').style.display = "flex";
+}
+
+;
+
+function closeModal() {
+  ReactDOM.unmountComponentAtNode(document.getElementById('modal-container'));
+  document.getElementById('modal-container').style.display = "none";
+}
+
+;
+
+function ModalBackBtn(props) {
+  return React.createElement("div", {
+    className: "modal-back-btn"
+  }, React.createElement("span", {
+    onClick: closeModal,
+    className: "fas fa-chevron-left"
+  }, React.createElement("p", {
+    className: "modal-back-btn-txt"
+  }, "back")));
+}
+
+;
+
+function ModalContainer(props) {
+  return React.createElement(React.Fragment, null, React.createElement("div", {
+    className: "overlay"
+  }), React.createElement("div", {
+    className: "modal-wrapper padding-default"
+  }, React.createElement("div", {
+    className: "modal default-size padding-default"
+  }, React.createElement(ModalBackBtn, null), React.createElement("h2", {
+    id: "modal-title",
+    className: "modal-title"
+  }, "Negotiation for ", props.productName), React.createElement("p", null, props.productId), React.createElement("button", {
+    className: ""
+  }, "Accept"))));
+}
+
+;
+
+async function renderNegotiation(productId, productName) {
+  const modal = React.createElement(ModalContainer, {
+    productId: productId,
+    productName: productName
+  });
+  ReactDOM.render(modal, document.getElementById('modal-container'));
+  openModal();
+}

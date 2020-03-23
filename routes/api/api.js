@@ -35,3 +35,17 @@ api.get('/products', async function(req, res) {
     res.sendStatus(500);
   }
 });
+
+api.post('/products', async function(req, res) {
+  try {
+    const products = await dbProducts.createProduct(req.body.product);
+    if (product.status === 'success') {
+      return res.status(201).json({ status: 'success' });
+    } else {
+      return res.status(400).json({ status: 'fail' });
+    }
+  } catch (e) {
+    console.log(e)
+    res.sendStatus(500);
+  }
+});

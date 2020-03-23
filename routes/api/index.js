@@ -8,5 +8,6 @@ APIRouter.route('/user/avatar')
 
 APIRouter.route('/products')
   .get(require('./api.js'))
+  .post(require('./api.js'))
 
 module.exports = APIRouter;

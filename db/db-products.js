@@ -25,3 +25,20 @@ module.exports.getProducts = async () => {
     return { status: 'error', error: e };
   }
 };
+
+module.exports.createProduct = async (productDetails) => {
+  try {
+    const sql = await config.sqlPromise;
+    const newProduct = {
+      product_name: productDetails.productName,
+      product_rrp: productDetails.productRRP,
+      product_lowestPrice: productDetails.productLowestPrice,
+      product_qty: productDetails.productQty
+    };
+    await sql.query(sql.format('INSERT INTO productDetails SET ?', newProduct));
+    return { status: 'success' };
+  } catch (e) {
+    console.log(e);
+    return { status: 'error', error: e };
+  }
+};
