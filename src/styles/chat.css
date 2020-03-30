@@ -1,0 +1,62 @@
+.message-window{
+   margin-left: 25vw;
+   margin-right: 25vw;
+   height: 25vw;
+}
+
+.chat{
+   background-color: lightsteelblue;
+   height: 25vw;
+   overflow: scroll;
+   position: relative;
+}
+
+
+.bot-chat{
+    color: black;
+    background-color: lightgray;
+    margin-right: 20vw;
+    margin-left: 5vw;
+    margin-bottom: 5vh;
+    border-radius: 25px;
+
+}
+
+.user-chat{
+    color: black;
+    background-color: lightgreen;
+    text-align: right;
+    margin-left: 20vw;
+    margin-right: 5vw;
+    margin-bottom: 5vh;
+    border-radius: 25px;
+}
+
+.dtStamp-float-right{
+    text-align: right;
+}
+
+.message-float-left{
+    text-align: left;
+}
+
+.message{
+    padding: 10px;
+}
+
+.dtStamp{
+    padding: 10px;
+}
+
+input{
+    width: 38vw;
+}
+
+button{
+    width: 10vw;
+}
+
+.message-window .input{
+    justify-content: flex-end;
+    display: flex;
+}

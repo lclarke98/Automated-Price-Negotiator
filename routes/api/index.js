@@ -10,4 +10,7 @@ APIRouter.route('/products')
   .get(require('./api.js'))
   .post(require('./api.js'))
 
+APIRouter.route('/negotiation')
+.post(require('./api.js'))
+
 module.exports = APIRouter;

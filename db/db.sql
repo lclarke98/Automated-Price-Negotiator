@@ -24,8 +24,9 @@ CREATE TABLE if not exists pn_DB.productDetails(
 
 
 CREATE TABLE if not exists pn_DB.negotiation(
-  negotiation_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  product_id int NOT NULL,
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  negotiation_id VARCHAR(8) NOT NULL,
+  product_id INT NOT NULL,
   user_id VARCHAR(25) NOT NULL,
   message VARCHAR(255) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

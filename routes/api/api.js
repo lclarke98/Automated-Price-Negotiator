@@ -2,9 +2,11 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
+const randomstring = require('randomstring');
 const config = require('../../config.js');
 const dbUser = require('../../db/db-user.js');
 const dbProducts = require('../../db/db-products.js');
+const dbNegotiation = require('../../db/db-negotiation.js');
 
 const api = express.Router();
 
@@ -49,3 +51,37 @@ api.post('/products', async function(req, res) {
     res.sendStatus(500);
   }
 });
+
+api.post('/negotiation', async function (req, res) {
+  try {
+    const userId = req.session.userId;
+    const productId = req.body.productId;
+    console.log("TEST")
+    console.log(userId)
+
+    const result = await dbNegotiation.check(userId, productId);
+    if (result.status === 'exists') {
+      // fetch the data
+      const negotiationChat = await dbNegotiation.getNegotiation(result.negotiationId)
+      return res.status(200).send(negotiationChat);
+    } else {
+      // create a new negotiation
+      let negotiationId;
+      let check = false;
+
+      while (check === false) {
+        negotiationId = randomstring.generate({length: 8,charset: 'alphanumeric'});
+        const negotiationIdSearch = await dbNegotiation.checkNegotiationId(negotiationId);
+        if (negotiationIdSearch.status === 'empty') {
+        check = true;
+        }
+      }
+
+      await dbNegotiation.createNegotiation(negotiationId, userId, productId);
+      res.status(200).json({ msg: 'hello, negotiation created' })
+    }
+  } catch (e) {
+    console.log(e)
+    res.sendStatus(500);
+  }
+})

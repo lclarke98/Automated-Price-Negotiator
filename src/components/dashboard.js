@@ -175,14 +175,52 @@ function ModalContainer(props) {
   }, React.createElement(ModalBackBtn, null), React.createElement("h2", {
     id: "modal-title",
     className: "modal-title"
-  }, "Negotiation for ", props.productName), React.createElement("p", null, props.productId), React.createElement("button", {
+  }, "Negotiation for ", props.productName), React.createElement("p", null, props.productId), React.createElement("div", {
+    className: "message-window"
+  }, React.createElement("div", {
+    className: "chat",
+    id: "chat"
+  })), React.createElement("div", {
+    className: "input"
+  }, React.createElement("input", {
+    id: "negotiation-user-input",
+    type: "text",
+    placeholder: "Enter offer"
+  }), React.createElement("button", {
+    onClick: () => sendOffer()
+  }, "Send offer")), React.createElement("button", {
+    onClick: () => acceptOffer(),
     className: ""
   }, "Accept"))));
 }
 
 ;
 
+async function sendOffer() {
+  const userOffer = document.getElementById("negotiation-user-input");
+  const offer = userOffer.value;
+  console.log(offer);
+  userOffer.value = "";
+}
+
+async function acceptOffer() {
+  console.log("I am the accept button");
+}
+
 async function renderNegotiation(productId, productName) {
+  // create or check a negotiation exists
+  const checkNegotiation = await fetch('/api/negotiation', {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      productId: productId
+    })
+  });
+  const result = await checkNegotiation.json();
+  console.log(result); // Load the negotiaiton data here then render
+
   const modal = React.createElement(ModalContainer, {
     productId: productId,
     productName: productName
