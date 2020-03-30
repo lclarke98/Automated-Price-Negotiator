@@ -115,27 +115,43 @@ function ModalBackBtn(props) {
   );
 };
 
-function ModalContainer(props) {
-  return (
-    <React.Fragment>
-    <div className="overlay"></div>
-    <div className="modal-wrapper padding-default">
-    <div className="modal default-size padding-default">
-    <ModalBackBtn />
-    <h2 id="modal-title" className="modal-title">Negotiation for {props.productName}</h2>
-    <p>{props.productId}</p>
-    <div className="message-window">
-    <div className="chat" id="chat"></div>
-    </div>
-    <div className="input">
-    <input id="negotiation-user-input" type="text" placeholder="Enter offer" />
-    <button onClick={() => sendOffer()}>Send offer</button>
-    </div>
-    <button onClick={() => acceptOffer()} className="">Accept</button>
-    </div>
-    </div>
-    </React.Fragment>
-  );
+class ModalContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      productId: props.productId,
+      productName: props.productName,
+      messages: props.messages,
+      class: ["user-chat", "bot-chat"],
+    };
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+      <div className="overlay"></div>
+      <div className="modal-wrapper padding-default">
+      <div className="modal default-size padding-default">
+      <ModalBackBtn />
+      <h2 id="modal-title" className="modal-title">Negotiation for {this.state.productName}</h2>
+      <p>{this.state.productId}</p>
+      <div className="message-window">
+      <div className="chat" id="chat">
+      {this.state.messages.map((val, i) =>
+        <div className={this.state.class[i%2]}>{this.state.messages[i].message}</div>
+      )}
+      </div>
+      </div>
+      <div className="input">
+      <input id="negotiation-user-input" type="text" placeholder="Enter offer" />
+      <button onClick={() => sendOffer()}>Send offer</button>
+      </div>
+      <button onClick={() => acceptOffer()} className="">Accept</button>
+      </div>
+      </div>
+      </React.Fragment>
+    );
+  }
 };
 
 async function sendOffer() {
@@ -161,7 +177,7 @@ async function renderNegotiation(productId, productName) {
   const result = await checkNegotiation.json();
   console.log(result)
   // Load the negotiaiton data here then render
-  const modal = <ModalContainer productId={productId} productName={productName} />
+  const modal = <ModalContainer productId={productId} productName={productName} messages={result} />
   ReactDOM.render(
     modal,
     document.getElementById('modal-container')

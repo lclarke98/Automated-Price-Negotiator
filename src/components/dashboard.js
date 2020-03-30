@@ -165,33 +165,48 @@ function ModalBackBtn(props) {
 
 ;
 
-function ModalContainer(props) {
-  return React.createElement(React.Fragment, null, React.createElement("div", {
-    className: "overlay"
-  }), React.createElement("div", {
-    className: "modal-wrapper padding-default"
-  }, React.createElement("div", {
-    className: "modal default-size padding-default"
-  }, React.createElement(ModalBackBtn, null), React.createElement("h2", {
-    id: "modal-title",
-    className: "modal-title"
-  }, "Negotiation for ", props.productName), React.createElement("p", null, props.productId), React.createElement("div", {
-    className: "message-window"
-  }, React.createElement("div", {
-    className: "chat",
-    id: "chat"
-  })), React.createElement("div", {
-    className: "input"
-  }, React.createElement("input", {
-    id: "negotiation-user-input",
-    type: "text",
-    placeholder: "Enter offer"
-  }), React.createElement("button", {
-    onClick: () => sendOffer()
-  }, "Send offer")), React.createElement("button", {
-    onClick: () => acceptOffer(),
-    className: ""
-  }, "Accept"))));
+class ModalContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      productId: props.productId,
+      productName: props.productName,
+      messages: props.messages,
+      class: ["user-chat", "bot-chat"]
+    };
+  }
+
+  render() {
+    return React.createElement(React.Fragment, null, React.createElement("div", {
+      className: "overlay"
+    }), React.createElement("div", {
+      className: "modal-wrapper padding-default"
+    }, React.createElement("div", {
+      className: "modal default-size padding-default"
+    }, React.createElement(ModalBackBtn, null), React.createElement("h2", {
+      id: "modal-title",
+      className: "modal-title"
+    }, "Negotiation for ", this.state.productName), React.createElement("p", null, this.state.productId), React.createElement("div", {
+      className: "message-window"
+    }, React.createElement("div", {
+      className: "chat",
+      id: "chat"
+    }, this.state.messages.map((val, i) => React.createElement("div", {
+      className: this.state.class[i % 2]
+    }, this.state.messages[i].message)))), React.createElement("div", {
+      className: "input"
+    }, React.createElement("input", {
+      id: "negotiation-user-input",
+      type: "text",
+      placeholder: "Enter offer"
+    }), React.createElement("button", {
+      onClick: () => sendOffer()
+    }, "Send offer")), React.createElement("button", {
+      onClick: () => acceptOffer(),
+      className: ""
+    }, "Accept"))));
+  }
+
 }
 
 ;
@@ -223,7 +238,8 @@ async function renderNegotiation(productId, productName) {
 
   const modal = React.createElement(ModalContainer, {
     productId: productId,
-    productName: productName
+    productName: productName,
+    messages: result
   });
   ReactDOM.render(modal, document.getElementById('modal-container'));
   openModal();

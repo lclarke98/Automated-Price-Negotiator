@@ -1,5 +1,4 @@
 .message-window{
-   margin-left: 25vw;
    margin-right: 25vw;
    height: 25vw;
 }
@@ -7,6 +6,7 @@
 .chat{
    background-color: lightsteelblue;
    height: 25vw;
+   width: 25vw;
    overflow: scroll;
    position: relative;
 }
