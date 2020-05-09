@@ -5,7 +5,7 @@ async function dashboardOrchestrator() {
     cache: 'default'
   });
   const products = await getProducts.json();
-
+  console.log(products)
   const buyUI = <BuyListUI products={products} />
   const sellUI = <AddItemForm/>
 
@@ -39,7 +39,7 @@ class BuyListUI extends React.Component {
         <section className="cmpnt-info-l">
         <p>RRP: £{this.state.product[i].product_rrp}</p>
         <p>Quantity: {this.state.product[i].product_qty} in stock</p>
-        <p>People Negotiation Now!:{this.state.product[i].negotiations} ({this.state.product[i].discount})</p>
+        <p>People Negotiating Now!: {this.state.product[i].negotiations} ({this.state.product[i].negotiations}% Extra Group Discount)</p>
         </section>
         <div className="cmpnt-seperator"></div>
         <section className="cmpnt-btn-container-l">

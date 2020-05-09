@@ -5,6 +5,7 @@ async function dashboardOrchestrator() {
     cache: 'default'
   });
   const products = await getProducts.json();
+  console.log(products);
   const buyUI = React.createElement(BuyListUI, {
     products: products
   });
@@ -34,7 +35,7 @@ class BuyListUI extends React.Component {
       className: "cmpnt-seperator"
     }), React.createElement("section", {
       className: "cmpnt-info-l"
-    }, React.createElement("p", null, "RRP: \xA3", this.state.product[i].product_rrp), React.createElement("p", null, "Quantity: ", this.state.product[i].product_qty, " in stock"), React.createElement("p", null, "People Negotiation Now!:", this.state.product[i].negotiations, " (", this.state.product[i].discount, ")")), React.createElement("div", {
+    }, React.createElement("p", null, "RRP: \xA3", this.state.product[i].product_rrp), React.createElement("p", null, "Quantity: ", this.state.product[i].product_qty, " in stock"), React.createElement("p", null, "People Negotiating Now!: ", this.state.product[i].negotiations, " (", this.state.product[i].negotiations, "% Extra Group Discount)")), React.createElement("div", {
       className: "cmpnt-seperator"
     }), React.createElement("section", {
       className: "cmpnt-btn-container-l"

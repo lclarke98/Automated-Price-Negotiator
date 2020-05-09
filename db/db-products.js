@@ -17,9 +17,19 @@ const config = require('../config.js');
 
 module.exports.getProducts = async () => {
   try {
+    let resultsArr = [];
     const sql = await config.sqlPromise;
     const [result] = await sql.query(sql.format('SELECT * FROM productDetails'));
-    return result;
+
+    for (let i = 0; i < result.length; i++) {
+      let [num] = await sql.query(sql.format('SELECT distinct negotiation_id FROM negotiation where product_id = ? and created_at >= CURRENT_TIMESTAMP() - 600', [result[i].product_id]));
+      
+      let jsonObject = { product_id: result[i].product_id, product_name: result[i].product_name , product_rrp: result[i].product_rrp,
+        product_lowestPrice: result[i].product_lowestPrice, product_qty: result[i].product_qty, negotiations: num.length }
+      resultsArr.push(jsonObject);
+    }
+
+    return resultsArr;
   } catch (e) {
     console.log(e)
     return { status: 'error', error: e };

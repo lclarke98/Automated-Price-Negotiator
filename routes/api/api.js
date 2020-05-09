@@ -30,7 +30,6 @@ api.get('/user/avatar', async function(req, res) {
 api.get('/products', async function(req, res) {
   try {
     const products = await dbProducts.getProducts();
-    console.log(products)
     res.status(200).json(products);
   } catch (e) {
     console.log(e)
