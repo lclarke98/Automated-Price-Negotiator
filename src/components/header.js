@@ -31,12 +31,15 @@ function HeaderBar(props) {
   }, React.createElement("div", {
     onClick: openBuyUI,
     id: "buy-ui-btn",
-    className: "header-menu-btn r-btn transition-02"
+    className: "header-menu-btn transition-02"
   }, "Buy"), React.createElement("div", {
     onClick: openSellUI,
     id: "sell-ui-btn",
-    className: "header-menu-btn l-btn transition-02"
-  }, "Sell")), React.createElement("div", {
+    className: "header-menu-btn transition-02"
+  }, "Sell"), React.createElement("div", {
+    onClick: gLogout,
+    id: "logout"
+  }, "Logout")), React.createElement("div", {
     className: "header-btns"
   }, React.createElement("div", {
     className: "btn-container"
@@ -44,12 +47,7 @@ function HeaderBar(props) {
     id: "avatar-img",
     src: props.avatar,
     alt: "Profile Image Placeholder"
-  })), React.createElement("div", {
-    id: "avatar-menu"
-  }, React.createElement("h1", {
-    id: "logout",
-    onClick: gLogout
-  }, "Logout")))));
+  })))));
 }
 
 ;

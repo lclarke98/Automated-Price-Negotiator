@@ -26,15 +26,13 @@ function HeaderBar(props) {
     <div className="header-container transition-03">
       <section className="header-container">
         <div className="header-menu">
-          <div onClick={openBuyUI} id="buy-ui-btn" className="header-menu-btn r-btn transition-02">Buy</div>
-          <div onClick={openSellUI} id="sell-ui-btn" className="header-menu-btn l-btn transition-02">Sell</div>
+          <div onClick={openBuyUI} id="buy-ui-btn" className="header-menu-btn transition-02">Buy</div>
+          <div onClick={openSellUI} id="sell-ui-btn" className="header-menu-btn transition-02">Sell</div>
+          <div onClick={gLogout} id="logout">Logout</div>
         </div>
         <div className="header-btns">
           <div className="btn-container">
             <img id="avatar-img" src={props.avatar} alt="Profile Image Placeholder"></img>
-          </div>
-          <div id="avatar-menu">
-            <h1 id="logout" onClick={gLogout}>Logout</h1>
           </div>
         </div>
       </section>

@@ -41,7 +41,7 @@ api.get('/products', async function(req, res) {
 api.post('/products', async function(req, res) {
   try {
     const products = await dbProducts.createProduct(req.body.product);
-    if (product.status === 'success') {
+    if (products.status === 'success') {
       return res.status(201).json({ status: 'success' });
     } else {
       return res.status(400).json({ status: 'fail' });
