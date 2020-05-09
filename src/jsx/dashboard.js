@@ -120,6 +120,7 @@ class ModalContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      negotiationId: props.negotiationId,
       productId: props.productId,
       productName: props.productName,
       messages: props.messages,
@@ -145,7 +146,7 @@ class ModalContainer extends React.Component {
       </div>
       <div className="input">
       <input id="negotiation-user-input" type="text" placeholder="Enter offer" />
-      <button onClick={() => sendOffer()}>Send offer</button>
+      <button onClick={() => sendOffer(this.state.negotiationId, this.state.productId)}>Send offer</button>
       </div>
       <button onClick={() => acceptOffer()} className="">Accept</button>
       </div>
@@ -155,7 +156,7 @@ class ModalContainer extends React.Component {
   }
 };
 
-async function sendOffer() {
+async function sendOffer(negotiationId, productId) {
   const userOffer = document.getElementById("negotiation-user-input");
   const offer = userOffer.value;
   console.log(offer)
@@ -178,7 +179,7 @@ async function renderNegotiation(productId, productName) {
   const result = await checkNegotiation.json();
   console.log(result)
   // Load the negotiaiton data here then render
-  const modal = <ModalContainer productId={productId} productName={productName} messages={result} />
+  const modal = <ModalContainer negotiationId={result.negotiationId} productId={result.productId} productName={result.productName} messages={result.chat} />
   ReactDOM.render(
     modal,
     document.getElementById('modal-container')

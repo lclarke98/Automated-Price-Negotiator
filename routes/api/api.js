@@ -55,14 +55,14 @@ api.post('/negotiation', async function (req, res) {
   try {
     const userId = req.session.userId;
     const productId = req.body.productId;
-    console.log("TEST")
+    console.log("Offer received from")
     console.log(userId)
-
     const result = await dbNegotiation.check(userId, productId);
     if (result.status === 'exists') {
       // fetch the data
       const negotiationChat = await dbNegotiation.getNegotiation(result.negotiationId)
-      return res.status(200).send(negotiationChat);
+      const productName = await dbProducts.getProductName(productId);
+      return res.status(200).json({ negotiationId: result.negotiationId, product_id: productId, product_name: productName, chat: negotiationChat });
     } else {
       // create a new negotiation
       let negotiationId;
@@ -77,10 +77,13 @@ api.post('/negotiation', async function (req, res) {
       }
 
       await dbNegotiation.createNegotiation(negotiationId, userId, productId);
-      res.status(200).json({ msg: 'hello, negotiation created' })
+      const productName = await dbProducts.getProductName(productId);
+      res.status(201).json({ negotiationId: negotiationId, product_id: productId, product_name: productName, chat: ['hello, negotiation created'] })
     }
   } catch (e) {
     console.log(e)
     res.sendStatus(500);
   }
 })
+
+api.post('/offer/:negotiationId')

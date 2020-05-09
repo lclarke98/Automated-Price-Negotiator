@@ -36,7 +36,7 @@ use pn_DB;
 
 insert into userDetails (user_id, user_name, user_email, user_picture) values ("BOT", "BOT", "bot@APNSA.com", "Void");
 
-insert into productDetails (product_name, product_rrp, product_lowestPrice, product_qty) values ("LENOVO IdeaPad S340 14 Laptop - Intel® Core™ i3, 128 GB SSD, Blue", 399.99, 359.99, 13);
+insert into productDetails (product_name, product_rrp, product_lowestPrice, product_qty) values ("LENOVO IdeaPad S340 14 Laptop - Intel Core i3, 128 GB SSD, Blue", 399.99, 359.99, 13);
 insert into productDetails (product_name, product_rrp, product_lowestPrice, product_qty) values ("NINTENDO Switch Lite - Turquoise", 199.00, 139.99, 17);
 insert into productDetails (product_name, product_rrp, product_lowestPrice, product_qty) values ("SAMSUNG LS34J550 Quad HD 34 LED Monitor - Dark Grey", 379.00, 319.99, 20);
 

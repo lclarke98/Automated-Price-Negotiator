@@ -23,7 +23,7 @@ module.exports.getProducts = async () => {
 
     for (let i = 0; i < result.length; i++) {
       let [num] = await sql.query(sql.format('SELECT distinct negotiation_id FROM negotiation where product_id = ? and created_at >= CURRENT_TIMESTAMP() - 600', [result[i].product_id]));
-      
+
       let jsonObject = { product_id: result[i].product_id, product_name: result[i].product_name , product_rrp: result[i].product_rrp,
         product_lowestPrice: result[i].product_lowestPrice, product_qty: result[i].product_qty, negotiations: num.length }
       resultsArr.push(jsonObject);
@@ -49,6 +49,18 @@ module.exports.createProduct = async (productDetails) => {
     return { status: 'success' };
   } catch (e) {
     console.log(e);
+    return { status: 'error', error: e };
+  }
+};
+
+module.exports.getProductName = async (productId) => {
+  try {
+    const sql = await config.sqlPromise;
+    const [result] = await sql.query(sql.format('SELECT * FROM productDetails where product_id = ?', [productId]));
+
+    return result[0].product_name;
+  } catch (e) {
+    console.log(e)
     return { status: 'error', error: e };
   }
 };
