@@ -45,3 +45,11 @@ insert into negotiation (negotiation_id, product_id, user_id, message) values ("
 insert into negotiation (negotiation_id, product_id, user_id, message) values ("8chrg221", 1, "BOT", "How are you doing?");
 insert into negotiation (negotiation_id, product_id, user_id, message) values ("8chrg221", 1, "BOT", "That is good.");
 insert into negotiation (negotiation_id, product_id, user_id, message) values ("66hrg221", 1, "BOT", "Hello");
+
+insert into negotiation (negotiation_id, product_id, user_id, message) values ("23RxPF0n ", 1, "BOT", "Hello");
+insert into negotiation (negotiation_id, product_id, user_id, message) values ("23RxPF0n ", 1, "116058431724805631769", "£123");
+insert into negotiation (negotiation_id, product_id, user_id, message) values ("23RxPF0n ", 1, "BOT", "£124");
+insert into negotiation (negotiation_id, product_id, user_id, message) values ("23RxPF0n ", 1, "116058431724805631769", "£123.20");
+insert into negotiation (negotiation_id, product_id, user_id, message) values ("23RxPF0n ", 1, "BOT", "£123.90");
+insert into negotiation (negotiation_id, product_id, user_id, message) values ("23RxPF0n ", 1, "116058431724805631769", "£123.40");
+insert into negotiation (negotiation_id, product_id, user_id, message) values ("23RxPF0n ", 1, "BOT", "£123.50");

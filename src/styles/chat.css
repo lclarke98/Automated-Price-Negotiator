@@ -1,12 +1,13 @@
 .message-window{
    margin-right: 25vw;
    height: 25vw;
+   width: 30vw;
 }
 
 .chat{
    background-color: lightsteelblue;
    height: 25vw;
-   width: 25vw;
+   width: 30vw;
    overflow: scroll;
    position: relative;
 }
@@ -15,21 +16,21 @@
 .bot-chat{
     color: black;
     background-color: lightgray;
-    margin-right: 20vw;
-    margin-left: 5vw;
+    margin-right: 15vw;
+    margin-left: 1vw;
     margin-bottom: 5vh;
     border-radius: 25px;
-
+    text-align: center;
 }
 
 .user-chat{
     color: black;
     background-color: lightgreen;
-    text-align: right;
-    margin-left: 20vw;
-    margin-right: 5vw;
+    text-align: center;
+    margin-left: 15vw;
     margin-bottom: 5vh;
     border-radius: 25px;
+    margin-right: 1vw;
 }
 
 .dtStamp-float-right{
@@ -49,7 +50,7 @@
 }
 
 input{
-    width: 38vw;
+    width: 30vw;
 }
 
 button{
