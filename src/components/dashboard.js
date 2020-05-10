@@ -217,7 +217,18 @@ async function sendOffer(negotiationId, productId) {
   const userOffer = document.getElementById("negotiation-user-input");
   const offer = userOffer.value;
   console.log(offer);
+  console.log(productId)
   userOffer.value = "";
+  const sendOffer = await fetch('/api/negotiation', {
+    method: 'post',
+    headers: { 'Content-Type' : 'application/json' },
+    body: JSON.stringify({
+      productId: productId,
+      negotiationId: negotiationId,
+      offerValue: offer,
+    })
+  });
+  const result = await sendOffer.json();
 }
 
 async function acceptOffer() {

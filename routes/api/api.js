@@ -55,8 +55,10 @@ api.post('/negotiation', async function (req, res) {
   try {
     const userId = req.session.userId;
     const productId = req.body.productId;
+    const offer = req.body.offerValue
     console.log("Offer received from")
     console.log(userId)
+    console.log(offer)
     const result = await dbNegotiation.check(userId, productId);
     if (result.status === 'exists') {
       // fetch the data
