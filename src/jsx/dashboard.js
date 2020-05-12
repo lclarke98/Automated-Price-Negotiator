@@ -125,7 +125,11 @@ class ModalContainer extends React.Component {
       productName: props.productName,
       messages: props.messages,
       class: ["user-chat", "bot-chat"],
+      startResponse: ["I would like a group buying deal for", "For"],
+      endResponse: ["to purchase this item at £", "How about £"]
     };
+    console.log("modal")
+    console.log(this.state)
   }
 
   render() {
@@ -137,17 +141,19 @@ class ModalContainer extends React.Component {
       <ModalBackBtn />
       <h2 id="modal-title" className="modal-title">Negotiation for {this.state.productName}</h2>
       <p>{this.state.productId}</p>
+      <p>Welcome, please enter your offer using the two input boxes displayed below.</p>
       <div className="message-window">
       <div className="chat" id="chat">
       {this.state.messages.map((val, i) =>
-        <div className={this.state.class[i%2]}>{this.state.messages[i].message}</div>
+      <div className={this.state.class[i%2]}>{this.state.startResponse[i%2]} {this.state.messages[i].qty} buying clients {this.state.endResponse[i%2]}{this.state.messages[i].message} per item</div>
       )}
       </div>
       </div>
       <div className="input">
-      <input id="negotiation-user-input" type="text" placeholder="Enter offer" />
-      <button onClick={() => sendOffer(this.state.negotiationId, this.state.productId)}>Send offer</button>
+      <input id="negotiation-user-qty" type="text" placeholder="Enter the minimum number of buying clients" />
+      <input id="negotiation-user-price" type="text" placeholder="Enter price" />
       </div>
+      <button onClick={() => sendOffer(this.state.negotiationId, this.state.productId)}>Send offer</button>
       <button onClick={() => acceptOffer()} className="">Accept</button>
       </div>
       </div>
@@ -157,17 +163,20 @@ class ModalContainer extends React.Component {
 };
 
 async function sendOffer(negotiationId, productId) {
-  const userOffer = document.getElementById("negotiation-user-input");
-  const offer = userOffer.value;
-  console.log(productId)
-  userOffer.value = "";
-  const sendOffer = await fetch('/api/negotiation', {
+  const userOfferQty = document.getElementById("negotiation-user-qty");
+  const userOfferPrice = document.getElementById("negotiation-user-price");
+  const qty = userOfferQty.value;
+  const price = userOfferPrice.value;
+  userOfferPrice.value = "";
+
+  const sendOffer = await fetch('/api/response', {
     method: 'post',
     headers: { 'Content-Type' : 'application/json' },
     body: JSON.stringify({
       productId: productId,
       negotiationId: negotiationId,
-      offerValue: offer,
+      offerValue: price,
+      offerQty: qty,
     })
   });
   const result = await sendOffer.json();
@@ -188,9 +197,10 @@ async function renderNegotiation(productId, productName) {
     })
   });
   const result = await checkNegotiation.json();
+  console.log("results from server")
   console.log(result)
   // Load the negotiaiton data here then render
-  const modal = <ModalContainer negotiationId={result.negotiationId} productId={result.productId} productName={result.productName} messages={result.chat} />
+  const modal = <ModalContainer negotiationId={result.negotiationId} productId={result.product_id} productName={result.product_name} messages={result.messages} />
   ReactDOM.render(
     modal,
     document.getElementById('modal-container')

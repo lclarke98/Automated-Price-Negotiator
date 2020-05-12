@@ -46,10 +46,23 @@ module.exports.checkNegotiationId = async (negotiationId) => {
     }
 }
 
+module.exports.getNegotiationMessages = async (negotiationId) => {
+  try {
+    const sql = await config.sqlPromise;
+    const [result] = await sql.query(sql.format('SELECT * FROM negotiation WHERE negotiation_id = ?', [negotiationId]));
+    result.splice(0, 1);
+    return result;
+  } catch (e) {
+    console.log(e);
+    return { status: 'error', error: e };
+  }
+};
+
 module.exports.getNegotiation = async (negotiationId) => {
   try {
     const sql = await config.sqlPromise;
     const [result] = await sql.query(sql.format('SELECT * FROM negotiation WHERE negotiation_id = ?', [negotiationId]));
+    result.splice(0, 1);
     return result;
   } catch (e) {
     console.log(e);
@@ -64,12 +77,29 @@ module.exports.createNegotiation = async (negotiationId, userId, productId) => {
         const newNegotiation = {
             negotiation_id: negotiationId,
             product_id: productId,
-            user_id: userId,
-            message: "Hello, I would like to negotiate."
+            user_id: userId
           };
           await sql.query(sql.format('INSERT INTO negotiation SET ?', newNegotiation));
     } catch(e) {
         console.log(e);
         return { status: 'error', error: e };
     }
+}
+
+module.exports.addNegotiationResponse = async (negotiationId, productId, userId, qty, price) => {
+  try {
+    const sql = await config.sqlPromise;
+    
+    const newResponse = {
+        negotiation_id: negotiationId,
+        product_id: productId,
+        user_id: userId,
+        qty: qty,
+        message: price
+      };
+      await sql.query(sql.format('INSERT INTO negotiation SET ?', newResponse));
+  } catch(e) {
+    console.log(e);
+    return { status: 'error', error: e };
+  }
 }

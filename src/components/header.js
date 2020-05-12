@@ -9,7 +9,7 @@ async function loadHeader() {
     cache: 'default'
   });
   const userAvatar = await response.text();
-  const header = React.createElement(HeaderBar, {
+  const header = /*#__PURE__*/React.createElement(HeaderBar, {
     avatar: userAvatar
   });
   ReactDOM.render(header, document.getElementById('universal-header'));
@@ -22,28 +22,28 @@ async function loadHeader() {
 */
 
 function HeaderBar(props) {
-  return React.createElement("div", {
+  return /*#__PURE__*/React.createElement("div", {
     className: "header-container transition-03"
-  }, React.createElement("section", {
+  }, /*#__PURE__*/React.createElement("section", {
     className: "header-container"
-  }, React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     className: "header-menu"
-  }, React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     onClick: openBuyUI,
     id: "buy-ui-btn",
     className: "header-menu-btn transition-02"
-  }, "Buy"), React.createElement("div", {
+  }, "Buy"), /*#__PURE__*/React.createElement("div", {
     onClick: openSellUI,
     id: "sell-ui-btn",
     className: "header-menu-btn transition-02"
-  }, "Sell"), React.createElement("div", {
+  }, "Sell"), /*#__PURE__*/React.createElement("div", {
     onClick: gLogout,
     id: "logout"
-  }, "Logout")), React.createElement("div", {
+  }, "Logout")), /*#__PURE__*/React.createElement("div", {
     className: "header-btns"
-  }, React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     className: "btn-container"
-  }, React.createElement("img", {
+  }, /*#__PURE__*/React.createElement("img", {
     id: "avatar-img",
     src: props.avatar,
     alt: "Profile Image Placeholder"

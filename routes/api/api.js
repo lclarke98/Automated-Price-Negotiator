@@ -55,16 +55,14 @@ api.post('/negotiation', async function (req, res) {
   try {
     const userId = req.session.userId;
     const productId = req.body.productId;
-    const offer = req.body.offerValue
     console.log("Offer received from")
     console.log(userId)
-    console.log(offer)
     const result = await dbNegotiation.check(userId, productId);
     if (result.status === 'exists') {
       // fetch the data
-      const negotiationChat = await dbNegotiation.getNegotiation(result.negotiationId)
+      const negotiationMessages = await dbNegotiation.getNegotiationMessages(result.negotiationId)
       const productName = await dbProducts.getProductName(productId);
-      return res.status(200).json({ negotiationId: result.negotiationId, product_id: productId, product_name: productName, chat: negotiationChat });
+      return res.status(200).json({ negotiationId: result.negotiationId, product_id: productId, product_name: productName, messages: negotiationMessages });
     } else {
       // create a new negotiation
       let negotiationId;
@@ -80,7 +78,7 @@ api.post('/negotiation', async function (req, res) {
 
       await dbNegotiation.createNegotiation(negotiationId, userId, productId);
       const productName = await dbProducts.getProductName(productId);
-      res.status(201).json({ negotiationId: negotiationId, product_id: productId, product_name: productName, chat: ['hello, negotiation created'] })
+      res.status(201).json({ negotiationId: negotiationId, product_id: productId, product_name: productName, messages: [] })
     }
   } catch (e) {
     console.log(e)
@@ -88,4 +86,56 @@ api.post('/negotiation', async function (req, res) {
   }
 })
 
-api.post('/offer/:negotiationId')
+api.post('/response', async function(req, res) {
+  const userId = req.session.userId;
+  const negotiationId = req.body.negotiationId;
+  const productId = req.body.productId;
+  const price = req.body.offerValue;
+  const qty = req.body.offerQty;
+  console.log(price)
+  console.log(qty)
+  await dbNegotiation.addNegotiationResponse(negotiationId, productId, userId, qty, price)
+  // NEGOTIATION ALGORITHM
+})
+
+// async function negotiationBot(negotiationId, productId, qty, userPrice) {
+//   percentageDrop = [] // the percentage difference between offers
+//   percentageOffer = [] // for calculating new offer
+//   // get the negotiation using the id provided
+//   const negotiation = await dbNegotiation.getNegotiation(negotiationId);
+//   // get the proudcts details at the center of the negotiation
+//   const productDetails = await dbProducts.getProduct(productId);
+//   // If statement for first offer scenario
+//   if (negotiation.length === 2) {// first msg
+//     if(negotiation[2].message > productDetails.product_rrp){// offer higher than start price
+//       newOffer = productDetails.product_rrp
+
+//     } else if (productDetails.product_rrp - negotiation[2].message == percentageDrop[0]) { // too small a drop
+//       newOffer = productDetails.product_rrp - percentageSet[0] // small percentage drop
+
+//     } else if(negotiation[i].message - userPrice == percentageDrop[2]){ // ideal percentage drop
+//       newOffer = userPrice - percentageDrop / 2 // take percentage drop / by 2
+
+//     }else {// if not first message
+
+//       if(negotiation[i].message - userPrice == percentageDrop[0]) {//for small drop in last offer
+//         newOffer = productDetails.product_rrp - percentageSet[0] // send new offerwith small drop
+
+//       }else if(negotiation[i].message - userPrice == percentageDrop[2]){ // ideal percentage drop
+//         newOffer = userPrice - percentageDrop / 2 // take percentage drop / by 2
+        
+//       }else if (negotiation[i].message - userPrice  > percentageDrop[1]){// too big a drop in price
+//         newoffer = negotiation[i].message - percentageDrop[2]
+//       } 
+//     }
+//   } else {
+//     const discountPerBuyer = (20 / 5000);
+//     let newOfferPrice = newOffer - (newOffer * (qty * discountPerBuyer));
+//   }
+//   if (newOfferPrice < userPrice) {
+//     do something
+//     exeception that you do not go over rrp set for product.
+//   }
+//   await dbNegotiation.addNegotiationResponse(negotiationId, productId, "BOT", qty, WHATE HE DEDUCES)
+//   res.send
+// }

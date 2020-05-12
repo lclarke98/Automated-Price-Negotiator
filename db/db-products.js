@@ -64,3 +64,15 @@ module.exports.getProductName = async (productId) => {
     return { status: 'error', error: e };
   }
 };
+
+module.exports.getProduct = async (productId) => {
+  try {
+    const sql = await config.sqlPromise;
+    const [result] = await sql.query(sql.format('SELECT * FROM productDetails where product_id = ?', [productId]));
+
+    return result[0];
+  } catch (e) {
+    console.log(e)
+    return { status: 'error', error: e };
+  }
+};

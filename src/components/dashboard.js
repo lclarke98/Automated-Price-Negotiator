@@ -6,10 +6,10 @@ async function dashboardOrchestrator() {
   });
   const products = await getProducts.json();
   console.log(products);
-  const buyUI = React.createElement(BuyListUI, {
+  const buyUI = /*#__PURE__*/React.createElement(BuyListUI, {
     products: products
   });
-  const sellUI = React.createElement(AddItemForm, null);
+  const sellUI = /*#__PURE__*/React.createElement(AddItemForm, null);
   ReactDOM.render(buyUI, document.getElementById('buy-container'));
   ReactDOM.render(sellUI, document.getElementById('sell-container'));
 }
@@ -23,28 +23,28 @@ class BuyListUI extends React.Component {
   }
 
   render() {
-    return React.createElement("div", {
+    return /*#__PURE__*/React.createElement("div", {
       id: "list",
       className: "list-layout"
-    }, this.state.product.map((name, i) => React.createElement("div", {
+    }, this.state.product.map((name, i) => /*#__PURE__*/React.createElement("div", {
       key: i.toString(),
       className: "cmpnt-container-l padding-0810"
-    }, React.createElement("section", {
+    }, /*#__PURE__*/React.createElement("section", {
       className: "cmpnt-name"
-    }, React.createElement("h1", null, this.state.product[i].product_name)), React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("h1", null, this.state.product[i].product_name)), /*#__PURE__*/React.createElement("div", {
       className: "cmpnt-seperator"
-    }), React.createElement("section", {
+    }), /*#__PURE__*/React.createElement("section", {
       className: "cmpnt-info-l"
-    }, React.createElement("p", null, "RRP: \xA3", this.state.product[i].product_rrp), React.createElement("p", null, "Quantity: ", this.state.product[i].product_qty, " in stock"), React.createElement("p", null, "People Negotiating Now!: ", this.state.product[i].negotiations, " (", this.state.product[i].negotiations, "% Extra Group Discount)")), React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("p", null, "RRP: \xA3", this.state.product[i].product_rrp), /*#__PURE__*/React.createElement("p", null, "Quantity: ", this.state.product[i].product_qty, " in stock"), /*#__PURE__*/React.createElement("p", null, "People Negotiating Now!: ", this.state.product[i].negotiations, " (", this.state.product[i].negotiations, "% Extra Group Discount)")), /*#__PURE__*/React.createElement("div", {
       className: "cmpnt-seperator"
-    }), React.createElement("section", {
+    }), /*#__PURE__*/React.createElement("section", {
       className: "cmpnt-btn-container-l"
-    }, React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("div", {
       className: "default-btns-l"
-    }, React.createElement("a", {
+    }, /*#__PURE__*/React.createElement("a", {
       onClick: () => renderNegotiation(this.state.product[i].product_id, this.state.product[i].product_name),
       className: "cmpnt-btn-l"
-    }, React.createElement("span", null, React.createElement("p", null, "Negotiate!"))))))));
+    }, /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("p", null, "Negotiate!"))))))));
   }
 
 }
@@ -88,10 +88,10 @@ class AddItemForm extends React.Component {
 
   render() {
     // Complete me
-    return React.createElement("form", {
+    return /*#__PURE__*/React.createElement("form", {
       onSubmit: this.submitHandler,
       onChange: this.changeHandler
-    }, React.createElement("input", {
+    }, /*#__PURE__*/React.createElement("input", {
       className: "modal-input-max",
       type: "text",
       name: "productName",
@@ -100,7 +100,7 @@ class AddItemForm extends React.Component {
       minLength: "10",
       maxLength: "64",
       required: true
-    }), React.createElement("input", {
+    }), /*#__PURE__*/React.createElement("input", {
       className: "modal-input-max",
       type: "number",
       name: "productRRP",
@@ -110,7 +110,7 @@ class AddItemForm extends React.Component {
       step: "0.01",
       maxLength: "5000",
       required: true
-    }), React.createElement("input", {
+    }), /*#__PURE__*/React.createElement("input", {
       className: "modal-input-max",
       type: "number",
       name: "productLowestPrice",
@@ -120,7 +120,7 @@ class AddItemForm extends React.Component {
       step: "0.01",
       maxLength: "5000",
       required: true
-    }), React.createElement("input", {
+    }), /*#__PURE__*/React.createElement("input", {
       className: "modal-input-max",
       type: "number",
       name: "productQty",
@@ -129,7 +129,7 @@ class AddItemForm extends React.Component {
       minLength: "1",
       maxLength: "100",
       required: true
-    }), React.createElement("input", {
+    }), /*#__PURE__*/React.createElement("input", {
       className: "modal-btn",
       type: "submit",
       value: "Submit"
@@ -154,12 +154,12 @@ function closeModal() {
 ;
 
 function ModalBackBtn(props) {
-  return React.createElement("div", {
+  return /*#__PURE__*/React.createElement("div", {
     className: "modal-back-btn"
-  }, React.createElement("span", {
+  }, /*#__PURE__*/React.createElement("span", {
     onClick: closeModal,
     className: "fas fa-chevron-left"
-  }, React.createElement("p", {
+  }, /*#__PURE__*/React.createElement("p", {
     className: "modal-back-btn-txt"
   }, "back")));
 }
@@ -174,36 +174,44 @@ class ModalContainer extends React.Component {
       productId: props.productId,
       productName: props.productName,
       messages: props.messages,
-      class: ["user-chat", "bot-chat"]
+      class: ["user-chat", "bot-chat"],
+      startResponse: ["I would like a group buying deal for", "For"],
+      endResponse: ["to purchase this item at £", "How about £"]
     };
+    console.log("modal");
+    console.log(this.state);
   }
 
   render() {
-    return React.createElement(React.Fragment, null, React.createElement("div", {
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "overlay"
-    }), React.createElement("div", {
+    }), /*#__PURE__*/React.createElement("div", {
       className: "modal-wrapper padding-default"
-    }, React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("div", {
       className: "modal default-size padding-default"
-    }, React.createElement(ModalBackBtn, null), React.createElement("h2", {
+    }, /*#__PURE__*/React.createElement(ModalBackBtn, null), /*#__PURE__*/React.createElement("h2", {
       id: "modal-title",
       className: "modal-title"
-    }, "Negotiation for ", this.state.productName), React.createElement("p", null, this.state.productId), React.createElement("div", {
+    }, "Negotiation for ", this.state.productName), /*#__PURE__*/React.createElement("p", null, this.state.productId), /*#__PURE__*/React.createElement("p", null, "Welcome, please enter your offer using the two input boxes displayed below."), /*#__PURE__*/React.createElement("div", {
       className: "message-window"
-    }, React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("div", {
       className: "chat",
       id: "chat"
-    }, this.state.messages.map((val, i) => React.createElement("div", {
+    }, this.state.messages.map((val, i) => /*#__PURE__*/React.createElement("div", {
       className: this.state.class[i % 2]
-    }, this.state.messages[i].message)))), React.createElement("div", {
+    }, this.state.startResponse[i % 2], " ", this.state.messages[i].qty, " buying clients ", this.state.endResponse[i % 2], this.state.messages[i].message, " per item")))), /*#__PURE__*/React.createElement("div", {
       className: "input"
-    }, React.createElement("input", {
-      id: "negotiation-user-input",
+    }, /*#__PURE__*/React.createElement("input", {
+      id: "negotiation-user-qty",
       type: "text",
-      placeholder: "Enter offer"
-    }), React.createElement("button", {
+      placeholder: "Enter the minimum number of buying clients"
+    }), /*#__PURE__*/React.createElement("input", {
+      id: "negotiation-user-price",
+      type: "text",
+      placeholder: "Enter price"
+    })), /*#__PURE__*/React.createElement("button", {
       onClick: () => sendOffer(this.state.negotiationId, this.state.productId)
-    }, "Send offer")), React.createElement("button", {
+    }, "Send offer"), /*#__PURE__*/React.createElement("button", {
       onClick: () => acceptOffer(),
       className: ""
     }, "Accept"))));
@@ -214,18 +222,21 @@ class ModalContainer extends React.Component {
 ;
 
 async function sendOffer(negotiationId, productId) {
-  const userOffer = document.getElementById("negotiation-user-input");
-  const offer = userOffer.value;
-  console.log(offer);
-  console.log(productId)
-  userOffer.value = "";
-  const sendOffer = await fetch('/api/negotiation', {
+  const userOfferQty = document.getElementById("negotiation-user-qty");
+  const userOfferPrice = document.getElementById("negotiation-user-price");
+  const qty = userOfferQty.value;
+  const price = userOfferPrice.value;
+  userOfferPrice.value = "";
+  const sendOffer = await fetch('/api/response', {
     method: 'post',
-    headers: { 'Content-Type' : 'application/json' },
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
       productId: productId,
       negotiationId: negotiationId,
-      offerValue: offer,
+      offerValue: price,
+      offerQty: qty
     })
   });
   const result = await sendOffer.json();
@@ -247,13 +258,14 @@ async function renderNegotiation(productId, productName) {
     })
   });
   const result = await checkNegotiation.json();
+  console.log("results from server");
   console.log(result); // Load the negotiaiton data here then render
 
-  const modal = React.createElement(ModalContainer, {
+  const modal = /*#__PURE__*/React.createElement(ModalContainer, {
     negotiationId: result.negotiationId,
-    productId: result.productId,
-    productName: result.productName,
-    messages: result.chat
+    productId: result.product_id,
+    productName: result.product_name,
+    messages: result.messages
   });
   ReactDOM.render(modal, document.getElementById('modal-container'));
   openModal();
