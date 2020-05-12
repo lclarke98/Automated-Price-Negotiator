@@ -27,8 +27,9 @@ CREATE TABLE if not exists pn_DB.negotiation(
   product_id INT NOT NULL,
   user_id VARCHAR(25) NOT NULL,
   qty INT,
-  message VARCHAR(255),
+  message FLOAT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  finalOffer BOOLEAN NOT NULL,
   FOREIGN KEY (user_id) REFERENCES userDetails(user_id) ON DELETE CASCADE,
   FOREIGN KEY (product_id) REFERENCES productDetails(product_id) ON DELETE CASCADE
 ) ENGINE=INNODB;

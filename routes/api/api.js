@@ -16,18 +16,18 @@ api.use(bodyParser.json());
 api.use(bodyParser.urlencoded({ extended: true }));
 api.use(session(config.cookie));
 
-api.get('/user/avatar', async function(req, res) {
+api.get('/user/avatar', async function (req, res) {
   try {
     const userId = req.session.userId;
     const userAvatar = await dbUser.getUserAvatar(userId);
     res.send(userAvatar.picture);
-  } catch(e) {
+  } catch (e) {
     console.log(e);
     res.sendStatus(404);
   }
 });
 
-api.get('/products', async function(req, res) {
+api.get('/products', async function (req, res) {
   try {
     const products = await dbProducts.getProducts();
     res.status(200).json(products);
@@ -37,7 +37,7 @@ api.get('/products', async function(req, res) {
   }
 });
 
-api.post('/products', async function(req, res) {
+api.post('/products', async function (req, res) {
   try {
     const products = await dbProducts.createProduct(req.body.product);
     if (products.status === 'success') {
@@ -55,8 +55,6 @@ api.post('/negotiation', async function (req, res) {
   try {
     const userId = req.session.userId;
     const productId = req.body.productId;
-    console.log("Offer received from")
-    console.log(userId)
     const result = await dbNegotiation.check(userId, productId);
     if (result.status === 'exists') {
       // fetch the data
@@ -69,10 +67,10 @@ api.post('/negotiation', async function (req, res) {
       let check = false;
 
       while (check === false) {
-        negotiationId = randomstring.generate({length: 8,charset: 'alphanumeric'});
+        negotiationId = randomstring.generate({ length: 8, charset: 'alphanumeric' });
         const negotiationIdSearch = await dbNegotiation.checkNegotiationId(negotiationId);
         if (negotiationIdSearch.status === 'empty') {
-        check = true;
+          check = true;
         }
       }
 
@@ -86,56 +84,87 @@ api.post('/negotiation', async function (req, res) {
   }
 })
 
-api.post('/response', async function(req, res) {
+api.post('/response', async function (req, res) {
   const userId = req.session.userId;
   const negotiationId = req.body.negotiationId;
   const productId = req.body.productId;
   const price = req.body.offerValue;
   const qty = req.body.offerQty;
-  console.log(price)
-  console.log(qty)
-  await dbNegotiation.addNegotiationResponse(negotiationId, productId, userId, qty, price)
+  await dbNegotiation.addUserNegotiationResponse(negotiationId, productId, userId, qty, price)
   // NEGOTIATION ALGORITHM
 })
 
-// async function negotiationBot(negotiationId, productId, qty, userPrice) {
-//   percentageDrop = [] // the percentage difference between offers
-//   percentageOffer = [] // for calculating new offer
-//   // get the negotiation using the id provided
-//   const negotiation = await dbNegotiation.getNegotiation(negotiationId);
-//   // get the proudcts details at the center of the negotiation
-//   const productDetails = await dbProducts.getProduct(productId);
-//   // If statement for first offer scenario
-//   if (negotiation.length === 2) {// first msg
-//     if(negotiation[2].message > productDetails.product_rrp){// offer higher than start price
-//       newOffer = productDetails.product_rrp
+async function negotiationBot(negotiationId, productId, qty, userPrice) {
+  percentageDrop = [1, 10, 11, 20] // the percentage difference between offers
+  percentageSet = [1, 3, 5] // for calculating new offer
+  // get the negotiation using the id provided
+  const negotiation = await dbNegotiation.getNegotiation(negotiationId);
+  const negotiationLength = negotiation.length;
+  // get the proudcts details at the center of the negotiation
+  const productDetails = await dbProducts.getProduct(productId);
 
-//     } else if (productDetails.product_rrp - negotiation[2].message == percentageDrop[0]) { // too small a drop
-//       newOffer = productDetails.product_rrp - percentageSet[0] // small percentage drop
+  // Calculations
+  const percentageDifference = 100 * Math.abs(productDetails.product_rrp - userPrice) / ((productDetails.product_rrp + userPrice) / 2)
 
-//     } else if(negotiation[i].message - userPrice == percentageDrop[2]){ // ideal percentage drop
-//       newOffer = userPrice - percentageDrop / 2 // take percentage drop / by 2
+  let newOffer = negotiation[negotiationLength - 2].message;
+  if (negotiation[negotiationLength - 2].finalOffer !== true) {
+    // If statement for first offer scenario
+    if (negotiation.length === 1) { // first response from buying client
+      if (userPrice >= productDetails.product_rrp) { // BC offer is higher than start price
+        newOffer = productDetails.product_rrp
 
-//     }else {// if not first message
+      } else if (percentageDifference > percentageDrop[1]) { // counter offer exceeds boundaries
+        newOffer = productDetails.product_rrp - ((productDetails.product_rrp / 100) * percentageSet[0]) // small percentage drop
 
-//       if(negotiation[i].message - userPrice == percentageDrop[0]) {//for small drop in last offer
-//         newOffer = productDetails.product_rrp - percentageSet[0] // send new offerwith small drop
+      } else if (percentageDifference >= percentageDrop[0] && percentageDifference <= percentageDrop[1]) { // reasonable percentage drop
+        newOffer = userPrice + ((productDetails.product_rrp / 100) * (percentageDifference / 2.5)) // take percentage drop / by 2.5
 
-//       }else if(negotiation[i].message - userPrice == percentageDrop[2]){ // ideal percentage drop
-//         newOffer = userPrice - percentageDrop / 2 // take percentage drop / by 2
-        
-//       }else if (negotiation[i].message - userPrice  > percentageDrop[1]){// too big a drop in price
-//         newoffer = negotiation[i].message - percentageDrop[2]
-//       } 
-//     }
-//   } else {
-//     const discountPerBuyer = (20 / 5000);
-//     let newOfferPrice = newOffer - (newOffer * (qty * discountPerBuyer));
-//   }
-//   if (newOfferPrice < userPrice) {
-//     do something
-//     exeception that you do not go over rrp set for product.
-//   }
-//   await dbNegotiation.addNegotiationResponse(negotiationId, productId, "BOT", qty, WHATE HE DEDUCES)
-//   res.send
-// }
+      } else if (percentageDifference >= percentageDrop[2] && percentageDifference <= percentageDrop[3]) { // reasonable percentage drop
+        newOffer = userPrice + ((productDetails.product_rrp / 100) * (percentageDifference / 1.25)) // take percentage drop / by 1.25
+      }
+    } else { // if not first message
+      const lastOffer = netgotiation[i - 2].message;
+      const botPercentageDiff = 100 * Math.abs(lastOffer - userPrice) / ((lastOffer + userPrice) / 2)
+
+      if (userPrice >= lastOffer) { // BC offer is higher than rrp price
+        newOffer = lastOffer;
+
+      } else if (botPercentageDiff > percentageDrop[3] || userPrice <= productDetails.product_lowestPrice) { // counter offer exceeds upper boundary
+        newOffer = lastOffer - ((lastOffer / 100) * percentageSet[0]) // small percentage drop
+
+      } else if (botPercentageDiff >= percentageDrop[2] && botPercentageDiff <= percentageDrop[3]) { // counter offer is in upper boundary
+        newOffer = userPrice + ((lastOffer / 100) * (botPercentageDiff / 2.5)) // take percentage drop / by 2.5
+
+      } else if (botPercentageDiff >= percentageDrop[0] && botPercentageDiff <= percentageDrop[1]) { // counter offer is in lower boundary
+        newOffer = userPrice + ((lastOffer / 100) * (botPercentageDiff / 1.25)) // take percentage drop / by 1.25
+
+      } else if (botPercentageDiff > percentageDrop[0]) { // counter offer exceeds lower boundary
+        newOffer = lastOffer - percentageSet[0] // send new offer with small drop
+
+      } else if (botPercentageDiff === 0) { // The same offer has been made
+        newOffer = negotiation[negotiationLength - 2].message;
+      } else {
+        break;
+      }
+    }
+  }
+
+  const discountPerBuyer = (20 / 5000);
+  newOffer = newOffer - (newOffer * (qty * discountPerBuyer));
+
+  if (newOffer < userPrice) {
+    //do something
+    console.log("hi")
+    //exeception that you do not go over rrp set for product.
+  } else if (newOffer < productDetails.product_lowestPrice) {
+
+  }
+
+  if () {
+    finalOffer = true;
+  }
+
+  await dbNegotiation.addBotNegotiationResponse(negotiationId, productId, "BOT", qty, newOffer, finalOffer)
+  res.send(201).json({ counterOffer: newOffer, finalOffer: finalOffer })
+}
+}

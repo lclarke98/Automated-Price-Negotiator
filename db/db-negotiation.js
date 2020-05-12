@@ -77,7 +77,8 @@ module.exports.createNegotiation = async (negotiationId, userId, productId) => {
         const newNegotiation = {
             negotiation_id: negotiationId,
             product_id: productId,
-            user_id: userId
+            user_id: userId,
+            finalOffer: false
           };
           await sql.query(sql.format('INSERT INTO negotiation SET ?', newNegotiation));
     } catch(e) {
@@ -86,7 +87,7 @@ module.exports.createNegotiation = async (negotiationId, userId, productId) => {
     }
 }
 
-module.exports.addNegotiationResponse = async (negotiationId, productId, userId, qty, price) => {
+module.exports.addUserNegotiationResponse = async (negotiationId, productId, userId, qty, price) => {
   try {
     const sql = await config.sqlPromise;
     
@@ -95,7 +96,27 @@ module.exports.addNegotiationResponse = async (negotiationId, productId, userId,
         product_id: productId,
         user_id: userId,
         qty: qty,
-        message: price
+        message: price,
+        finalOffer: false
+      };
+      await sql.query(sql.format('INSERT INTO negotiation SET ?', newResponse));
+  } catch(e) {
+    console.log(e);
+    return { status: 'error', error: e };
+  }
+}
+
+module.exports.addBotNegotiationResponse = async (negotiationId, productId, userId, qty, price, finalOffer) => {
+  try {
+    const sql = await config.sqlPromise;
+    
+    const newResponse = {
+        negotiation_id: negotiationId,
+        product_id: productId,
+        user_id: userId,
+        qty: qty,
+        message: price,
+        finalOffer: finalOffer
       };
       await sql.query(sql.format('INSERT INTO negotiation SET ?', newResponse));
   } catch(e) {
