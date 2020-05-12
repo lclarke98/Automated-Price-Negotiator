@@ -11,10 +11,9 @@ APIRouter.route('/products')
   .post(require('./api.js'))
 
 APIRouter.route('/negotiation')
-.post(require('./api.js'))
-
+  .post(require('./api.js'))
 
 APIRouter.route('/response')
-.post(require('./api.js'))
+  .post(require('./api.js'))
 
 module.exports = APIRouter;

@@ -90,8 +90,11 @@ api.post('/response', async function (req, res) {
   const productId = req.body.productId;
   const price = req.body.offerValue;
   const qty = req.body.offerQty;
+  let newOffer;
+  let finalOffer;
   await dbNegotiation.addUserNegotiationResponse(negotiationId, productId, userId, qty, price)
-  // NEGOTIATION ALGORITHM
+  newOffer, finalOffer = await negotiationBot(negotiationId, productId, qty, price)
+  res.send(201).json({ counterOffer: newOffer, finalOffer: finalOffer })
 })
 
 async function negotiationBot(negotiationId, productId, qty, userPrice) {
@@ -105,8 +108,8 @@ async function negotiationBot(negotiationId, productId, qty, userPrice) {
 
   // Calculations
   const percentageDifference = 100 * Math.abs(productDetails.product_rrp - userPrice) / ((productDetails.product_rrp + userPrice) / 2)
-
-  let newOffer = negotiation[negotiationLength - 2].message;
+  console.log(negotiationLength)
+  let newOffer = negotiation[negotiationLength-1].message;
   if (negotiation[negotiationLength - 2].finalOffer !== true) {
     // If statement for first offer scenario
     if (negotiation.length === 1) { // first response from buying client
@@ -123,7 +126,7 @@ async function negotiationBot(negotiationId, productId, qty, userPrice) {
         newOffer = userPrice + ((productDetails.product_rrp / 100) * (percentageDifference / 1.25)) // take percentage drop / by 1.25
       }
     } else { // if not first message
-      const lastOffer = netgotiation[i - 2].message;
+      const lastOffer = netgotiation[negotiationLength-2].message;
       const botPercentageDiff = 100 * Math.abs(lastOffer - userPrice) / ((lastOffer + userPrice) / 2)
 
       if (userPrice >= lastOffer) { // BC offer is higher than rrp price
@@ -144,7 +147,6 @@ async function negotiationBot(negotiationId, productId, qty, userPrice) {
       } else if (botPercentageDiff === 0) { // The same offer has been made
         newOffer = negotiation[negotiationLength - 2].message;
       } else {
-        break;
       }
     }
   }
@@ -153,18 +155,18 @@ async function negotiationBot(negotiationId, productId, qty, userPrice) {
   newOffer = newOffer - (newOffer * (qty * discountPerBuyer));
 
   if (newOffer < userPrice) {
-    //do something
-    console.log("hi")
-    //exeception that you do not go over rrp set for product.
+    newOffer = userPrice + ((userPrice / 100) * 1);
   } else if (newOffer < productDetails.product_lowestPrice) {
-
+    finalOffer = true;
+    newOffer = userPrice;
   }
 
-  if () {
-    finalOffer = true;
+  if (negotiationLength / 2 === 3) {
+    if (negotiation[negotiationLength - 1].message === negotiation[negotiationLength - 3].message && negotiation[negotiationLength - 1].message === negotiation[negotiationLength - 5].message) {
+      finalOffer = true;
+    }
   }
 
   await dbNegotiation.addBotNegotiationResponse(negotiationId, productId, "BOT", qty, newOffer, finalOffer)
-  res.send(201).json({ counterOffer: newOffer, finalOffer: finalOffer })
-}
+  return newOffer, finalOffer;
 }
