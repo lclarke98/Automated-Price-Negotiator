@@ -94,7 +94,7 @@ api.post('/response', async function (req, res) {
   let finalOffer;
   await dbNegotiation.addUserNegotiationResponse(negotiationId, productId, userId, qty, price)
   newOffer, finalOffer = await negotiationBot(negotiationId, productId, qty, price)
-  res.send(201).json({ counterOffer: newOffer, finalOffer: finalOffer })
+  res.status(201).json({ counterOffer: newOffer, finalOffer: finalOffer })
 })
 
 async function negotiationBot(negotiationId, productId, qty, userPrice) {
@@ -105,12 +105,16 @@ async function negotiationBot(negotiationId, productId, qty, userPrice) {
   const negotiationLength = negotiation.length;
   // get the proudcts details at the center of the negotiation
   const productDetails = await dbProducts.getProduct(productId);
-
+  // Setup and check finalOffer
+  let finalOffer = false;
+  if (negotiationLength >= 2) {
+    finalOffer = negotiation[negotiationLength-2].finalOffer;
+  }
   // Calculations
-  const percentageDifference = 100 * Math.abs(productDetails.product_rrp - userPrice) / ((productDetails.product_rrp + userPrice) / 2)
-  console.log(negotiationLength)
+  const percentageDifference = 100 * Math.abs((productDetails.product_rrp - userPrice) / ((productDetails.product_rrp + userPrice) / 2))
+  console.log(percentageDifference)
   let newOffer = negotiation[negotiationLength-1].message;
-  if (negotiation[negotiationLength - 2].finalOffer !== true) {
+  if (finalOffer !== true) {
     // If statement for first offer scenario
     if (negotiation.length === 1) { // first response from buying client
       if (userPrice >= productDetails.product_rrp) { // BC offer is higher than start price
@@ -126,7 +130,7 @@ async function negotiationBot(negotiationId, productId, qty, userPrice) {
         newOffer = userPrice + ((productDetails.product_rrp / 100) * (percentageDifference / 1.25)) // take percentage drop / by 1.25
       }
     } else { // if not first message
-      const lastOffer = netgotiation[negotiationLength-2].message;
+      const lastOffer = negotiation[negotiationLength-2].message;
       const botPercentageDiff = 100 * Math.abs(lastOffer - userPrice) / ((lastOffer + userPrice) / 2)
 
       if (userPrice >= lastOffer) { // BC offer is higher than rrp price
