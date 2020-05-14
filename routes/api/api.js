@@ -109,17 +109,11 @@ async function negotiationBot(negotiationId, productId, qty, userPriceString) {
   // Setup and check finalOffer
   let finalOffer = false;
   if (negotiationLength >= 2) {
-    finalOffer = negotiation[negotiationLength-2].finalOffer;
+    finalOffer = negotiation[negotiationLength-1].finalOffer;
   }
   // Calculations
   const percentageDifference = ((productDetails.product_rrp - userPrice) / ((productDetails.product_rrp + userPrice) / 2)) *100
-  console.log("rrp")
-  console.log(productDetails.product_rrp)
-  console.log("user price")
-  console.log(userPrice)
-  console.log("percentage diff")
-  console.log(percentageDifference)
-  let newOffer = negotiation[negotiationLength-1].message;
+  let newOffer = negotiation[negotiationLength-2].message;
   if (finalOffer !== true) {
     // If statement for first offer scenario
     if (negotiation.length === 1) { // first response from buying client
@@ -170,6 +164,10 @@ async function negotiationBot(negotiationId, productId, qty, userPriceString) {
   } else if (newOffer < productDetails.product_lowestPrice) {
     finalOffer = true;
     newOffer = userPrice;
+  }
+
+  if (finalOffer === true) {
+    finalOffer = negotiation[negotiationLength-2].finalOffer;
   }
 
   if (negotiationLength / 2 === 3) {
