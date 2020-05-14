@@ -170,7 +170,7 @@ async function negotiationBot(negotiationId, productId, qty, userPriceString) {
     finalOffer = negotiation[negotiationLength-2].finalOffer;
   }
 
-  if (negotiationLength / 2 === 3) {
+  if (negotiationLength / 2 > 3) {
     if (negotiation[negotiationLength - 1].message === negotiation[negotiationLength - 3].message && negotiation[negotiationLength - 1].message === negotiation[negotiationLength - 5].message) {
       finalOffer = true;
     }
