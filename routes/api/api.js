@@ -97,7 +97,8 @@ api.post('/response', async function (req, res) {
   res.status(201).json({ counterOffer: newOffer, finalOffer: finalOffer })
 })
 
-async function negotiationBot(negotiationId, productId, qty, userPrice) {
+async function negotiationBot(negotiationId, productId, qty, userPriceString) {
+  let userPrice = parseFloat(userPriceString)
   percentageDrop = [1, 10, 11, 20] // the percentage difference between offers
   percentageSet = [1, 3, 5] // for calculating new offer
   // get the negotiation using the id provided
@@ -111,7 +112,12 @@ async function negotiationBot(negotiationId, productId, qty, userPrice) {
     finalOffer = negotiation[negotiationLength-2].finalOffer;
   }
   // Calculations
-  const percentageDifference = 100 * Math.abs((productDetails.product_rrp - userPrice) / ((productDetails.product_rrp + userPrice) / 2))
+  const percentageDifference = ((productDetails.product_rrp - userPrice) / ((productDetails.product_rrp + userPrice) / 2)) *100
+  console.log("rrp")
+  console.log(productDetails.product_rrp)
+  console.log("user price")
+  console.log(userPrice)
+  console.log("percentage diff")
   console.log(percentageDifference)
   let newOffer = negotiation[negotiationLength-1].message;
   if (finalOffer !== true) {
@@ -146,7 +152,7 @@ async function negotiationBot(negotiationId, productId, qty, userPrice) {
         newOffer = userPrice + ((lastOffer / 100) * (botPercentageDiff / 1.25)) // take percentage drop / by 1.25
 
       } else if (botPercentageDiff > percentageDrop[0]) { // counter offer exceeds lower boundary
-        newOffer = lastOffer - percentageSet[0] // send new offer with small drop
+        newOffer = lastOffer - ((lastOffer/100)*percentageDrop[0]) // send new offer with small drop
 
       } else if (botPercentageDiff === 0) { // The same offer has been made
         newOffer = negotiation[negotiationLength - 2].message;
